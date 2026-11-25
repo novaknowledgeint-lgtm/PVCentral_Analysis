@@ -1,182 +1,489 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulation PV — Eloyes (2.88 kWc)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NovaKnowledge.int — Audit &amp; Modélisation PV | Site 0 (Éloyes)</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <style>
+    :root {
+      --navy: #0f2942;
+      --blue: #1f5c99;
+      --teal: #1e7e68;
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --border: #d8e0e8;
+      --text: #18222f;
+      --muted: #526071;
+    }
+    * { box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      max-width: 1200px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    header.hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #193f66 100%);
+      color: #fff;
+      padding: 28px 36px;
+      border-bottom: 4px solid var(--teal);
+    }
+    .hero-inner {
+      max-width: 1380px;
       margin: 0 auto;
-      padding: 20px;
-      background-color: #f8f9fa;
-      color: #212529;
-    }
-    h1 {
-      color: #1f497d;
-      border-bottom: 2px solid #1f497d;
-      padding-bottom: 8px;
-    }
-    .card {
-      background: #ffffff;
-      border-radius: 8px;
-      padding: 18px;
-      margin-bottom: 24px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-    .controls {
       display: flex;
       flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
       gap: 20px;
-      align-items: center;
-      background: #fffbe6;
-      border: 1px solid #ffe58f;
-      border-radius: 6px;
+    }
+    .brand-tag {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #93c5fd;
+      margin-bottom: 6px;
+    }
+    h1 { margin: 0 0 8px 0; font-size: 1.72rem; }
+    .subtitle { margin: 0; font-size: 0.96rem; color: #e2e8f0; max-width: 780px; }
+    .cta-box {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 8px;
       padding: 14px 18px;
-      margin-top: 12px;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.85rem;
     }
-    .control-group {
+    .cta-box strong { color: #a7f3d0; display: block; margin-bottom: 4px; }
+    main.container { max-width: 1380px; margin: 24px auto 48px auto; padding: 0 24px; }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .kpi-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--blue);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .kpi-label { font-size: 0.75rem; text-transform: uppercase; color: var(--muted); }
+    .kpi-val { font-size: 1.32rem; font-weight: 700; color: var(--navy); margin-top: 4px; }
+    .kpi-sub { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px rgba(15,41,66,0.04);
+    }
+    .panel-header {
       display: flex;
-      flex-direction: column;
-      min-width: 220px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
     }
-    label {
+    .panel-title { margin: 0; font-size: 1.15rem; color: var(--navy); }
+    .badge-acad {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.75rem;
+      background: #eef4fb;
+      color: var(--navy);
+      border: 1px solid #bfd3ea;
+      padding: 4px 10px;
+      border-radius: 999px;
       font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 4px;
     }
-    select, input[type="range"] {
+    .controls-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.85rem;
+    }
+    .ctrl-item label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 6px; color: var(--navy); }
+    .ctrl-item input[type="range"] { width: 100%; cursor: pointer; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    button.btn {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--navy);
       cursor: pointer;
     }
+    button.btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .charts-grid { display: grid; grid-template-columns: 1fr 1.08fr; gap: 16px; }
+    @media (max-width: 1020px) { .charts-grid { grid-template-columns: 1fr; } }
+    .chart-box { min-height: 430px; }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.85rem;
+    }
+    @media (max-width: 760px) { .metrics-grid { grid-template-columns: 1fr; } }
+    .metric-box { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; background: #fbfcfd; }
+    .metric-box h4 { margin: 0 0 6px 0; font-size: 0.9rem; color: var(--navy); }
+    .table-wrap {
+      max-height: 450px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.84rem;
+    }
+    table.forecast { width: 100%; border-collapse: collapse; }
+    table.forecast thead th {
+      position: sticky;
+      top: 0;
+      background: var(--navy);
+      color: #fff;
+      padding: 9px 10px;
+      text-align: right;
+      font-weight: 600;
+      z-index: 2;
+    }
+    table.forecast thead th:nth-child(1), table.forecast thead th:nth-child(2) { text-align: center; }
+    table.forecast tbody td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    table.forecast tbody td:nth-child(1), table.forecast tbody td:nth-child(2) { text-align: center; }
+    table.forecast tbody tr:nth-child(even) { background: #f8fafc; }
+    table.forecast tbody tr.milestone td { background: #eef4fb; font-weight: 700; }
+    td.st-in { background: #d4edda !important; color: #155724; font-weight: 700; }
+    td.st-below { background: #ffe5c2 !important; color: #8a4b00; font-weight: 700; }
+    td.st-above { background: #e3f2fd !important; color: #0d47a1; font-weight: 700; }
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.88rem;
+    }
+    .method-card { border-left: 3px solid var(--blue); padding-left: 12px; }
+    .method-card h4 { margin: 0 0 6px 0; color: var(--navy); }
+    footer { text-align: center; padding: 20px; font-family: system-ui, -apple-system, sans-serif; font-size: 0.8rem; color: var(--muted); }
   </style>
 </head>
 <body>
-  <h1>Analyse Photovoltaïque — Site d'Eloyes (2.88 kWc)</h1>
-  <p><strong>Configuration :</strong> Latitude 48.1° | Longitude 6.6° | Altitude 373.0 m | Inclinaison 20.0° | Azimut 240.0° (pvlib)</p>
-
-  <div class="card">
-    <div style="height:420px; width:100%;">                        <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.6.0.min.js" integrity="sha256-QaOVwtVY0T02VaHrr6pnoHLCwayMJp4O5n4YyaE3rJk=" crossorigin="anonymous"></script>                <div id="5282077c-25fd-4fee-8690-009f212936e2" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("5282077c-25fd-4fee-8690-009f212936e2")) {                    Plotly.newPlot(                        "5282077c-25fd-4fee-8690-009f212936e2",                        [{"hovertemplate":"\u003cb\u003e%{x|%b %Y}\u003c\u002fb\u003e\u003cbr\u003eÉnergie AC : %{y:.1f} kWh\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#2b5c8f"},"name":"Modèle Numérique (2.88 kWc)","x":["2005-01-31T00:00:00+00:00","2005-02-28T00:00:00+00:00","2005-03-31T00:00:00+00:00","2005-04-30T00:00:00+00:00","2005-05-31T00:00:00+00:00","2005-06-30T00:00:00+00:00","2005-07-31T00:00:00+00:00","2005-08-31T00:00:00+00:00","2005-09-30T00:00:00+00:00","2005-10-31T00:00:00+00:00","2005-11-30T00:00:00+00:00","2005-12-31T00:00:00+00:00","2006-01-31T00:00:00+00:00","2006-02-28T00:00:00+00:00","2006-03-31T00:00:00+00:00","2006-04-30T00:00:00+00:00","2006-05-31T00:00:00+00:00","2006-06-30T00:00:00+00:00","2006-07-31T00:00:00+00:00","2006-08-31T00:00:00+00:00","2006-09-30T00:00:00+00:00","2006-10-31T00:00:00+00:00","2006-11-30T00:00:00+00:00","2006-12-31T00:00:00+00:00","2007-01-31T00:00:00+00:00","2007-02-28T00:00:00+00:00","2007-03-31T00:00:00+00:00","2007-04-30T00:00:00+00:00","2007-05-31T00:00:00+00:00","2007-06-30T00:00:00+00:00","2007-07-31T00:00:00+00:00","2007-08-31T00:00:00+00:00","2007-09-30T00:00:00+00:00","2007-10-31T00:00:00+00:00","2007-11-30T00:00:00+00:00","2007-12-31T00:00:00+00:00","2008-01-31T00:00:00+00:00","2008-02-29T00:00:00+00:00","2008-03-31T00:00:00+00:00","2008-04-30T00:00:00+00:00","2008-05-31T00:00:00+00:00","2008-06-30T00:00:00+00:00","2008-07-31T00:00:00+00:00","2008-08-31T00:00:00+00:00","2008-09-30T00:00:00+00:00","2008-10-31T00:00:00+00:00","2008-11-30T00:00:00+00:00","2008-12-31T00:00:00+00:00","2009-01-31T00:00:00+00:00","2009-02-28T00:00:00+00:00","2009-03-31T00:00:00+00:00","2009-04-30T00:00:00+00:00","2009-05-31T00:00:00+00:00","2009-06-30T00:00:00+00:00","2009-07-31T00:00:00+00:00","2009-08-31T00:00:00+00:00","2009-09-30T00:00:00+00:00","2009-10-31T00:00:00+00:00","2009-11-30T00:00:00+00:00","2009-12-31T00:00:00+00:00","2010-01-31T00:00:00+00:00","2010-02-28T00:00:00+00:00","2010-03-31T00:00:00+00:00","2010-04-30T00:00:00+00:00","2010-05-31T00:00:00+00:00","2010-06-30T00:00:00+00:00","2010-07-31T00:00:00+00:00","2010-08-31T00:00:00+00:00","2010-09-30T00:00:00+00:00","2010-10-31T00:00:00+00:00","2010-11-30T00:00:00+00:00","2010-12-31T00:00:00+00:00","2011-01-31T00:00:00+00:00","2011-02-28T00:00:00+00:00","2011-03-31T00:00:00+00:00","2011-04-30T00:00:00+00:00","2011-05-31T00:00:00+00:00","2011-06-30T00:00:00+00:00","2011-07-31T00:00:00+00:00","2011-08-31T00:00:00+00:00","2011-09-30T00:00:00+00:00","2011-10-31T00:00:00+00:00","2011-11-30T00:00:00+00:00","2011-12-31T00:00:00+00:00","2012-01-31T00:00:00+00:00","2012-02-29T00:00:00+00:00","2012-03-31T00:00:00+00:00","2012-04-30T00:00:00+00:00","2012-05-31T00:00:00+00:00","2012-06-30T00:00:00+00:00","2012-07-31T00:00:00+00:00","2012-08-31T00:00:00+00:00","2012-09-30T00:00:00+00:00","2012-10-31T00:00:00+00:00","2012-11-30T00:00:00+00:00","2012-12-31T00:00:00+00:00","2013-01-31T00:00:00+00:00","2013-02-28T00:00:00+00:00","2013-03-31T00:00:00+00:00","2013-04-30T00:00:00+00:00","2013-05-31T00:00:00+00:00","2013-06-30T00:00:00+00:00","2013-07-31T00:00:00+00:00","2013-08-31T00:00:00+00:00","2013-09-30T00:00:00+00:00","2013-10-31T00:00:00+00:00","2013-11-30T00:00:00+00:00","2013-12-31T00:00:00+00:00","2014-01-31T00:00:00+00:00","2014-02-28T00:00:00+00:00","2014-03-31T00:00:00+00:00","2014-04-30T00:00:00+00:00","2014-05-31T00:00:00+00:00","2014-06-30T00:00:00+00:00","2014-07-31T00:00:00+00:00","2014-08-31T00:00:00+00:00","2014-09-30T00:00:00+00:00","2014-10-31T00:00:00+00:00","2014-11-30T00:00:00+00:00","2014-12-31T00:00:00+00:00","2015-01-31T00:00:00+00:00","2015-02-28T00:00:00+00:00","2015-03-31T00:00:00+00:00","2015-04-30T00:00:00+00:00","2015-05-31T00:00:00+00:00","2015-06-30T00:00:00+00:00","2015-07-31T00:00:00+00:00","2015-08-31T00:00:00+00:00","2015-09-30T00:00:00+00:00","2015-10-31T00:00:00+00:00","2015-11-30T00:00:00+00:00","2015-12-31T00:00:00+00:00","2016-01-31T00:00:00+00:00","2016-02-29T00:00:00+00:00","2016-03-31T00:00:00+00:00","2016-04-30T00:00:00+00:00","2016-05-31T00:00:00+00:00","2016-06-30T00:00:00+00:00","2016-07-31T00:00:00+00:00","2016-08-31T00:00:00+00:00","2016-09-30T00:00:00+00:00","2016-10-31T00:00:00+00:00","2016-11-30T00:00:00+00:00","2016-12-31T00:00:00+00:00","2017-01-31T00:00:00+00:00","2017-02-28T00:00:00+00:00","2017-03-31T00:00:00+00:00","2017-04-30T00:00:00+00:00","2017-05-31T00:00:00+00:00","2017-06-30T00:00:00+00:00","2017-07-31T00:00:00+00:00","2017-08-31T00:00:00+00:00","2017-09-30T00:00:00+00:00","2017-10-31T00:00:00+00:00","2017-11-30T00:00:00+00:00","2017-12-31T00:00:00+00:00","2018-01-31T00:00:00+00:00","2018-02-28T00:00:00+00:00","2018-03-31T00:00:00+00:00","2018-04-30T00:00:00+00:00","2018-05-31T00:00:00+00:00","2018-06-30T00:00:00+00:00","2018-07-31T00:00:00+00:00","2018-08-31T00:00:00+00:00","2018-09-30T00:00:00+00:00","2018-10-31T00:00:00+00:00","2018-11-30T00:00:00+00:00","2018-12-31T00:00:00+00:00","2019-01-31T00:00:00+00:00","2019-02-28T00:00:00+00:00","2019-03-31T00:00:00+00:00","2019-04-30T00:00:00+00:00","2019-05-31T00:00:00+00:00","2019-06-30T00:00:00+00:00","2019-07-31T00:00:00+00:00","2019-08-31T00:00:00+00:00","2019-09-30T00:00:00+00:00","2019-10-31T00:00:00+00:00","2019-11-30T00:00:00+00:00","2019-12-31T00:00:00+00:00","2020-01-31T00:00:00+00:00","2020-02-29T00:00:00+00:00","2020-03-31T00:00:00+00:00","2020-04-30T00:00:00+00:00","2020-05-31T00:00:00+00:00","2020-06-30T00:00:00+00:00","2020-07-31T00:00:00+00:00","2020-08-31T00:00:00+00:00","2020-09-30T00:00:00+00:00","2020-10-31T00:00:00+00:00","2020-11-30T00:00:00+00:00","2020-12-31T00:00:00+00:00","2021-01-31T00:00:00+00:00","2021-02-28T00:00:00+00:00","2021-03-31T00:00:00+00:00","2021-04-30T00:00:00+00:00","2021-05-31T00:00:00+00:00","2021-06-30T00:00:00+00:00","2021-07-31T00:00:00+00:00","2021-08-31T00:00:00+00:00","2021-09-30T00:00:00+00:00","2021-10-31T00:00:00+00:00","2021-11-30T00:00:00+00:00","2021-12-31T00:00:00+00:00","2022-01-31T00:00:00+00:00","2022-02-28T00:00:00+00:00","2022-03-31T00:00:00+00:00","2022-04-30T00:00:00+00:00","2022-05-31T00:00:00+00:00","2022-06-30T00:00:00+00:00","2022-07-31T00:00:00+00:00","2022-08-31T00:00:00+00:00","2022-09-30T00:00:00+00:00","2022-10-31T00:00:00+00:00","2022-11-30T00:00:00+00:00","2022-12-31T00:00:00+00:00","2023-01-31T00:00:00+00:00","2023-02-28T00:00:00+00:00","2023-03-31T00:00:00+00:00","2023-04-30T00:00:00+00:00","2023-05-31T00:00:00+00:00","2023-06-30T00:00:00+00:00","2023-07-31T00:00:00+00:00","2023-08-31T00:00:00+00:00","2023-09-30T00:00:00+00:00","2023-10-31T00:00:00+00:00","2023-11-30T00:00:00+00:00","2023-12-31T00:00:00+00:00"],"y":{"dtype":"f8","bdata":"GCrKZbAaV0AM8KgvtP5aQO2H0qE722tAuszpJVe1cEBEhtFdT5B1QEx1KjQr9HtA8D6tPz6wdkDHuPiccrp2QJCCbghljnFAik3kXv0oa0A6YHJV\u002fjNeQOOhzb3ov01AcIgl7hklYECxvl3ccK5bQKEctka1D2lAVfRUTbQ1cUBwNN4EKSFyQPHOW06jv3xA+EU\u002fINRke0DzruBm0iFyQDmyypj3Q3BA3mfWdh8HZ0BQE1EqYxNeQM0onKelllhAJDgBwemSUkC5FxBvzLZhQO8wtvMn321AKR1BH3AGekC6LLMB\u002fAJ0QEMEZ5s9YnVAJyK5gQ2jdUARnjP1JuFzQKkjrCvXhnBAZGFaQigWbkB7YKu0dpdaQPnUoitDeFhAm\u002fvpBWgeWED\u002f4ziTUuFmQPwlAoV5\u002fmRA2c4RUcYJb0BvYwG+JmR0QJiZaqd2vHVAwd6bMgJOd0C5dV46hhZ0QNTt1trB+G9A+7HGMkVxZUDnkPCRYk1ZQFxZy3Xt5FRAQUeF85d2XUAs5jOxkTVcQHF8SLmtPmpAd\u002ffX0lDLckDM3WQHZF95QEmOORcqI3dA78do2VHKdUCP7UUY6sh2QLabqH8yV3JAE2UyP2xRZ0Bh1OtbTfFWQKKp1v2pAVBAz+iaeTm3VkBOfqCIAHtYQNkt22o8zW5A4ScanFM5dkCPWF68UqNwQI5ICcYyknZA99aavt4cekDmPypWT2RyQEatyUEEE3FAvEW5GfPLaUCTe10h5F5RQBVd166Nrk5AfrsnrJjlWEAjR791ZTBhQIRizvuZk3FAdEcDa\u002fGJdkBhZUpq4PR6QFRPmDoSUnVAAJyew8iydUAZela2EGx2QO1MJjMq6XFAxUC37\u002fmFaUBmjmxxNyNjQNQ4Y3CbvktAkXP2l3mQVEDmGtfhv21mQDfAGELdWnRATkInKquxcECQuuoQWtR3QGSd8Y2wPHdA3c5cBL7\u002fd0CVrBBoNWl3QCg7NWpaUnFA1kQlFurxZkAvo6J6K+ldQN0k+5L9oU1AfYYO\u002fGLgUUA1jpuVJiVeQF+4rpe9KmhAJsLKs3IPcEDPhExtTv1tQB+eeayeT3ZAsmR0HAB5e0Dh8JHIZGt3QGDRdfTShW9AaM2gWMb6Y0AaYPENm\u002fZYQBMFigQE8llAwt\u002fGenxlWED6sObnlJxfQPisZQfdUHJAQhpObuBHc0Dn+c0Bs4F2QCTzl579fnpAHSu0AEk+c0AsbzM\u002fY590QCNO+ILHZ3JAcKAzxv9CZ0BNxBsVr1dbQLeSqQYq8EdAuAkQdRmLUkAmdx9uIFNhQF54oV7dPnFA3PUjVPrFdUBTFP95TY92QBMLY3tcU3hADajdLfqHe0CsbHhn0KF1QNlKSL+XunBAtAoZDckSaEDZzSvEYGhdQN01WLzLKFlAqKaieVyJU0CCqiU8qTpYQEEeEfMWI29AgZcgPhPgb0Bqsgz\u002f1lJ0QLVWs4KssnJAhdiAS6hpeECeObBnytZ3QLQ8IHPMMnFAusk9d8vXZUCMswPOKE5XQNo\u002fLB+eOWBAZ+OFrfNYXUAxQmC+FDxhQJHpluXB1G9ARZRYeSD9dED0\u002f47ejEx4QPHcrYmjI3tA2eCQvD6bdkBfxblnkyl2QGrGdDXNim1AFtRn7bQBaECkjZ21MsVWQJZJjDa9M01AmoDmkI6mUUA1S4wYghxjQNF1ZZyWw2dApoXxz2qBdEAgB9ZOEcZ2QGDRlsdck3lAeTsEhiXVekDG5XqmX2h3QJhb4SZXwHNAjKml6vQEa0CuR7L4aj1gQJvwaIJaN1JAgFpvu1AuUkB1bA0vcG1mQO0vcv0ck21AFZmXm9QfcUAfJf8tUiB2QJE9g6j6a3pAxTUuNq3IekBW+hrwFXl4QKvc9Yk7TXJA4yxfc8U1YkCgPCAudJJVQKstRDR+MlVAseMH0jEeXED5MhpKKl9gQE7Ck7YeLXBAix7ce1iAeUAARRDHQ0F6QN8rNWoKfXVAHoh\u002fLK9DfEAAErRDAB92QGMW0mqme3FAYZsAmYzlYEB8RSwYqT9iQIvQRurSjUtAw\u002fcF5m8vU0A8pvC8b4ZkQJAZRoOBNnBAP62Z25HkdUCyIoKm9OJ0QDNul9uSVHZAKHlBvp3XdkAJ2GOgSWNzQEdNKbRu7XFACL20IybAakDU+VetNy1YQKnzqComcFNAyTc\u002f0xsvXED5AVMXrMFhQBgvVUMAD3RAXaDXTB2PdEBfmiiXret5QJme7TCQL3pAT31QBEdbfkD\u002fK1zdz9p4QPLTlj8DlW9A1lMrbLvKaEDwZG2do2FZQJimiGsVRVRAbHeHOVRWU0B0obsZeHFjQKjjPr6wCm1AfBmhnlPocEBqDEIN\u002fHB5QBfBlXBZaHxAVEDoETxzeUCV92pMYkd0QLDX+yk2f3RAU6RkVHNXZkCOlQlZKKBRQLGorWjlekxA"},"type":"bar"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"margin":{"l":60,"r":30,"t":60,"b":50},"title":{"text":"Production Mensuelle Modélisée (2005–2023) — 2.88 kWc (Eloyes)"},"xaxis":{"title":{"text":"Année"}},"yaxis":{"title":{"text":"Énergie AC Mensuelle (kWh)"}},"height":420},                        {"responsive": true}                    )                };            </script>        </div>
-  </div>
-
-  <div class="card">
-    <div style="height:540px; width:100%;">                            <div id="clim_plot" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("clim_plot")) {                    Plotly.newPlot(                        "clim_plot",                        [{"fill":"toself","fillcolor":"rgba(31, 119, 180, 0.15)","hoverinfo":"skip","line":{"color":"rgba(255,255,255,0)"},"name":"Modèle Neuf (Min–Max)","x":["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc","Déc","Nov","Oct","Sep","Août","Juil","Juin","Mai","Avr","Mar","Fév","Jan"],"y":[129.15941531496674,183.04132996665427,325.67901811283394,416.402373556472,431.3047888666243,459.9773696504845,485.70483809891897,397.67574821476586,327.9507236325835,240.69241445209911,153.10051795198814,129.80055197374787,47.87628253250062,69.48267397050067,135.17341280096574,236.33754990394237,290.11386764304115,307.89282293680463,299.16711683324985,239.91582360215259,248.3054585788548,167.9523339311562,96.91657928160024,70.60245153913493],"type":"scatter"},{"error_y":{"array":[18.65993915741813,26.63000813393768,42.78419520283945,51.22816885482527,52.55403621296644,46.0135462091028,46.20033883901813,32.02743652697128,22.36939428090654,25.582783326336532,22.208775669874044,21.926833849050297],"thickness":1,"type":"data","visible":true},"hovertemplate":"\u003cb\u003e%{x} (Neuf)\u003c\u002fb\u003e\u003cbr\u003eMoyenne : %{y:.1f} kWh\u003cextra\u003e\u003c\u002fextra\u003e","line":{"color":"#1f77b4","width":2},"marker":{"size":6},"mode":"lines+markers","name":"Modèle Neuf (Moy ± SD)","x":["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"],"y":[91.80701283988877,137.71910993243014,245.14820339928562,313.46939228764705,354.5094251252065,386.92035340723504,396.14358703805647,348.662336016865,277.5564798584548,188.831370040109,106.56716757909598,76.23722782972715],"type":"scatter"},{"fill":"toself","fillcolor":"rgba(214, 39, 40, 0.18)","hoverinfo":"skip","line":{"color":"rgba(255,255,255,0)"},"name":"Modèle Vieilli Min–Max (10 ans)","x":["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc","Déc","Nov","Oct","Sep","Août","Juil","Juin","Mai","Avr","Mar","Fév","Jan"],"y":[122.84482835110083,174.09246322521295,309.75661340726197,396.0445158395532,410.2183540094472,437.4891360595749,461.9587919321194,378.2334327676194,311.9172555405308,228.92499371165763,145.61545360369269,123.45461992228054,45.535617325702816,66.08567510519359,128.56480228463016,224.7830379230995,275.93023850390256,292.839982992899,284.5408755223411,228.18637028704646,236.1658371042979,159.74116623729287,92.17834036481912,67.15070689458996],"type":"scatter"},{"hovertemplate":"\u003cb\u003e%{x} (Vieilli)\u003c\u002fb\u003e\u003cbr\u003eMoyenne : %{y:.1f} kWh\u003cextra\u003e\u003c\u002fextra\u003e","line":{"color":"#d62728","dash":"dash","width":2.5},"mode":"lines","name":"Modèle Vieilli Moyen (10 ans, 0.50%\u002fan)","x":["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"],"y":[87.3185799598194,130.98604061546362,233.16293971854412,298.1439145957302,337.17750558218097,368.0038678090179,376.7761787509447,331.6162798975013,263.9867797697953,179.5994289948785,101.35711265952175,72.50999970748056],"type":"scatter"},{"hovertemplate":"%{text}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"rgba(160, 160, 160, 0.45)","size":7},"mode":"markers","name":"Autres années (contexte)","text":[],"x":[],"y":[],"type":"scatter"},{"hovertemplate":"\u003cb\u003e%{text}\u003c\u002fb\u003e\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#2ca02c","line":{"color":"black","width":1},"size":9},"mode":"markers","name":"Réel (dans bande)","text":["Jan 2011 : 81.0 kWh","Fév 2011 : 119.0 kWh","Mar 2011 : 276.0 kWh","Avr 2011 : 367.0 kWh","Juin 2011 : 348.0 kWh","Juil 2011 : 363.0 kWh","Août 2011 : 349.0 kWh","Sep 2011 : 295.0 kWh","Oct 2011 : 197.0 kWh","Nov 2011 : 116.0 kWh","Fév 2012 : 170.0 kWh","Avr 2012 : 306.0 kWh","Mai 2012 : 351.0 kWh","Juin 2012 : 371.0 kWh","Juil 2012 : 369.0 kWh","Août 2012 : 372.0 kWh","Sep 2012 : 250.0 kWh","Oct 2012 : 174.0 kWh","Nov 2012 : 83.0 kWh","Mar 2013 : 187.0 kWh","Avr 2013 : 257.0 kWh","Mai 2013 : 238.0 kWh","Juin 2013 : 366.0 kWh","Juil 2013 : 423.0 kWh","Août 2013 : 357.0 kWh","Sep 2013 : 234.0 kWh","Oct 2013 : 148.0 kWh","Déc 2013 : 69.0 kWh","Jan 2014 : 76.0 kWh","Fév 2014 : 105.0 kWh","Mar 2014 : 266.0 kWh","Avr 2014 : 261.0 kWh","Mai 2014 : 360.0 kWh","Juin 2014 : 417.0 kWh","Sep 2014 : 288.0 kWh","Oct 2014 : 177.0 kWh","Nov 2014 : 76.0 kWh","Fév 2015 : 100.0 kWh","Mar 2015 : 227.0 kWh","Avr 2015 : 318.0 kWh","Mai 2015 : 313.0 kWh","Juin 2015 : 366.0 kWh","Juil 2015 : 394.0 kWh","Août 2015 : 309.0 kWh","Sep 2015 : 240.0 kWh","Oct 2015 : 167.0 kWh","Nov 2015 : 94.0 kWh","Déc 2015 : 72.0 kWh","Mar 2016 : 200.0 kWh","Mai 2016 : 263.0 kWh","Juil 2016 : 376.0 kWh","Août 2016 : 318.0 kWh","Sep 2016 : 260.0 kWh","Nov 2016 : 86.0 kWh","Déc 2016 : 83.0 kWh","Fév 2017 : 100.0 kWh","Mar 2017 : 205.0 kWh","Avr 2017 : 312.0 kWh","Mai 2017 : 348.0 kWh","Juin 2017 : 363.0 kWh","Juil 2017 : 326.0 kWh","Août 2017 : 325.0 kWh","Fév 2018 : 103.0 kWh","Avr 2018 : 255.0 kWh","Juil 2018 : 294.0 kWh","Sep 2018 : 266.0 kWh","Oct 2018 : 182.0 kWh","Nov 2018 : 88.0 kWh","Fév 2019 : 135.0 kWh","Mar 2019 : 190.0 kWh","Mai 2019 : 305.0 kWh","Juin 2019 : 371.0 kWh","Juil 2019 : 383.0 kWh","Août 2019 : 328.0 kWh","Sep 2019 : 273.0 kWh","Déc 2019 : 50.0 kWh","Mar 2020 : 207.0 kWh","Avr 2020 : 352.0 kWh","Mai 2020 : 368.0 kWh","Juin 2020 : 310.0 kWh","Juil 2020 : 401.0 kWh","Août 2020 : 304.0 kWh","Sep 2020 : 267.0 kWh","Nov 2020 : 70.0 kWh","Déc 2020 : 52.0 kWh","Mar 2021 : 197.0 kWh","Avr 2021 : 296.0 kWh","Mai 2021 : 282.0 kWh","Juin 2021 : 325.0 kWh","Juil 2021 : 307.0 kWh","Sep 2021 : 271.0 kWh","Oct 2021 : 198.0 kWh","Fév 2022 : 99.0 kWh","Mar 2022 : 246.0 kWh","Avr 2022 : 271.0 kWh","Mai 2022 : 368.0 kWh","Juin 2022 : 374.0 kWh","Juil 2022 : 440.0 kWh","Oct 2022 : 151.0 kWh","Fév 2023 : 96.0 kWh","Mai 2023 : 316.0 kWh","Juin 2023 : 383.0 kWh","Juil 2023 : 325.0 kWh","Sep 2023 : 258.0 kWh","Oct 2023 : 157.0 kWh","Août 2024 : 345.0 kWh","Fév 2025 : 94.0 kWh","Mar 2025 : 165.0 kWh","Avr 2025 : 249.0 kWh","Mai 2025 : 289.0 kWh","Juin 2025 : 346.0 kWh","Août 2025 : 336.0 kWh","Mar 2026 : 164.0 kWh","Avr 2026 : 274.0 kWh","Mai 2026 : 295.0 kWh","Juin 2026 : 328.0 kWh","Juil 2026 : 382.0 kWh","Sep 2026 : 257.0 kWh"],"x":["Jan","Fév","Mar","Avr","Juin","Juil","Août","Sep","Oct","Nov","Fév","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Déc","Jan","Fév","Mar","Avr","Mai","Juin","Sep","Oct","Nov","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc","Mar","Mai","Juil","Août","Sep","Nov","Déc","Fév","Mar","Avr","Mai","Juin","Juil","Août","Fév","Avr","Juil","Sep","Oct","Nov","Fév","Mar","Mai","Juin","Juil","Août","Sep","Déc","Mar","Avr","Mai","Juin","Juil","Août","Sep","Nov","Déc","Mar","Avr","Mai","Juin","Juil","Sep","Oct","Fév","Mar","Avr","Mai","Juin","Juil","Oct","Fév","Mai","Juin","Juil","Sep","Oct","Août","Fév","Mar","Avr","Mai","Juin","Août","Mar","Avr","Mai","Juin","Juil","Sep"],"y":[81.0,119.0,276.0,367.0,348.0,363.0,349.0,295.0,197.0,116.0,170.0,306.0,351.0,371.0,369.0,372.0,250.0,174.0,83.0,187.0,257.0,238.0,366.0,423.0,357.0,234.0,148.0,69.0,76.0,105.0,266.0,261.0,360.0,417.0,288.0,177.0,76.0,100.0,227.0,318.0,313.0,366.0,394.0,309.0,240.0,167.0,94.0,72.0,200.0,263.0,376.0,318.0,260.0,86.0,83.0,100.0,205.0,312.0,348.0,363.0,326.0,325.0,103.0,255.0,294.0,266.0,182.0,88.0,135.0,190.0,305.0,371.0,383.0,328.0,273.0,50.0,207.0,352.0,368.0,310.0,401.0,304.0,267.0,70.0,52.0,197.0,296.0,282.0,325.0,307.0,271.0,198.0,99.0,246.0,271.0,368.0,374.0,440.0,151.0,96.0,316.0,383.0,325.0,258.0,157.0,345.0,94.0,165.0,249.0,289.0,346.0,336.0,164.0,274.0,295.0,328.0,382.0,257.0],"type":"scatter"},{"hovertemplate":"\u003cb\u003e%{text}\u003c\u002fb\u003e\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"#ff7f0e","line":{"color":"black","width":1},"size":10,"symbol":"triangle-up"},"mode":"markers","name":"Réel (hors bande)","text":["Mai 2011 : 435.0 kWh","Déc 2011 : 23.0 kWh","Jan 2012 : 67.0 kWh","Mar 2012 : 323.0 kWh","Déc 2012 : 26.0 kWh","Jan 2013 : 49.0 kWh","Fév 2013 : 64.0 kWh","Nov 2013 : 64.0 kWh","Juil 2014 : 276.0 kWh","Août 2014 : 275.0 kWh","Déc 2014 : 15.0 kWh","Jan 2015 : 39.0 kWh","Jan 2016 : 40.0 kWh","Fév 2016 : 64.0 kWh","Avr 2016 : 211.0 kWh","Juin 2016 : 265.0 kWh","Oct 2016 : 127.0 kWh","Jan 2017 : 18.0 kWh","Sep 2017 : 329.0 kWh","Oct 2017 : 14.0 kWh","Nov 2017 : 34.0 kWh","Déc 2017 : 19.0 kWh","Jan 2018 : 32.0 kWh","Mar 2018 : 132.0 kWh","Mai 2018 : 149.0 kWh","Juin 2018 : 524.0 kWh","Août 2018 : 409.0 kWh","Déc 2018 : 35.0 kWh","Jan 2019 : 27.0 kWh","Avr 2019 : 224.0 kWh","Oct 2019 : 104.0 kWh","Nov 2019 : 41.0 kWh","Jan 2020 : 62.0 kWh","Fév 2020 : 91.0 kWh","Oct 2020 : 89.0 kWh","Jan 2021 : 23.0 kWh","Fév 2021 : 79.0 kWh","Août 2021 : 248.0 kWh","Nov 2021 : 51.0 kWh","Déc 2021 : 42.0 kWh","Jan 2022 : 57.0 kWh","Août 2022 : 416.0 kWh","Sep 2022 : 169.0 kWh","Nov 2022 : 53.0 kWh","Déc 2022 : 28.0 kWh","Jan 2023 : 20.0 kWh","Mar 2023 : 74.0 kWh","Avr 2023 : 201.0 kWh","Août 2023 : 256.0 kWh","Nov 2023 : 34.0 kWh","Déc 2023 : 20.0 kWh","Jan 2024 : 45.0 kWh","Fév 2024 : 51.0 kWh","Mar 2024 : 118.0 kWh","Avr 2024 : 199.0 kWh","Mai 2024 : 223.0 kWh","Juin 2024 : 246.0 kWh","Juil 2024 : 286.0 kWh","Sep 2024 : 154.0 kWh","Oct 2024 : 93.0 kWh","Nov 2024 : 58.0 kWh","Déc 2024 : 13.0 kWh","Jan 2025 : 47.0 kWh","Juil 2025 : 266.0 kWh","Sep 2025 : 148.0 kWh","Oct 2025 : 123.0 kWh","Nov 2025 : 55.0 kWh","Déc 2025 : 44.0 kWh","Jan 2026 : 25.0 kWh","Fév 2026 : 50.0 kWh","Août 2026 : 269.0 kWh","Oct 2026 : 127.0 kWh"],"x":["Mai","Déc","Jan","Mar","Déc","Jan","Fév","Nov","Juil","Août","Déc","Jan","Jan","Fév","Avr","Juin","Oct","Jan","Sep","Oct","Nov","Déc","Jan","Mar","Mai","Juin","Août","Déc","Jan","Avr","Oct","Nov","Jan","Fév","Oct","Jan","Fév","Août","Nov","Déc","Jan","Août","Sep","Nov","Déc","Jan","Mar","Avr","Août","Nov","Déc","Jan","Fév","Mar","Avr","Mai","Juin","Juil","Sep","Oct","Nov","Déc","Jan","Juil","Sep","Oct","Nov","Déc","Jan","Fév","Août","Oct"],"y":[435.0,23.0,67.0,323.0,26.0,49.0,64.0,64.0,276.0,275.0,15.0,39.0,40.0,64.0,211.0,265.0,127.0,18.0,329.0,14.0,34.0,19.0,32.0,132.0,149.0,524.0,409.0,35.0,27.0,224.0,104.0,41.0,62.0,91.0,89.0,23.0,79.0,248.0,51.0,42.0,57.0,416.0,169.0,53.0,28.0,20.0,74.0,201.0,256.0,34.0,20.0,45.0,51.0,118.0,199.0,223.0,246.0,286.0,154.0,93.0,58.0,13.0,47.0,266.0,148.0,123.0,55.0,44.0,25.0,50.0,269.0,127.0],"type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"legend":{"orientation":"v","x":1.02,"y":1.0},"margin":{"l":60,"r":220,"t":60,"b":50},"title":{"text":"Comparaison Modèle vs Relevés Réels (Toutes les années)"},"xaxis":{"title":{"text":"Mois"}},"yaxis":{"title":{"text":"Énergie AC (2.88 kWc - kWh)"}},"height":540},                        {"responsive": true}                    )                };            </script>        </div>
-    <div class="controls">
-      <div class="control-group">
-        <label for="ageSlider">Âge de l'installation : <span id="ageVal">10</span> ans</label>
-        <input type="range" id="ageSlider" min="0" max="30" step="1" value="10">
+  <header class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="brand-tag">NovaKnowledge.int • Audit &amp; Modélisation Photovoltaïque</div>
+        <h1>Trajectoire de Production &amp; Diagnostic de Vieillissement PV</h1>
+        <p class="subtitle">
+          Couplage physique <strong>pvlib</strong> (PVGIS-SARAH3, AOI/IAM ASHRAE, thermique SAPM) et confrontation aux relevés d'exploitation (2011–2026) sur un horizon de 30 ans.
+        </p>
       </div>
-      <div class="control-group">
-        <label for="rateSlider">Taux de dégradation : <span id="rateVal">0.50</span> %/an</label>
-        <input type="range" id="rateSlider" min="0" max="5" step="0.05" value="0.50">
-      </div>
-      <div class="control-group">
-        <label for="yearSelect">Sélection d'année réelle :</label>
-        <select id="yearSelect">
-          <option value="ALL" selected>Toutes les années (2011–2026)</option>
-<option value="2011">Année 2011</option>
-<option value="2012">Année 2012</option>
-<option value="2013">Année 2013</option>
-<option value="2014">Année 2014</option>
-<option value="2015">Année 2015</option>
-<option value="2016">Année 2016</option>
-<option value="2017">Année 2017</option>
-<option value="2018">Année 2018</option>
-<option value="2019">Année 2019</option>
-<option value="2020">Année 2020</option>
-<option value="2021">Année 2021</option>
-<option value="2022">Année 2022</option>
-<option value="2023">Année 2023</option>
-<option value="2024">Année 2024</option>
-<option value="2025">Année 2025</option>
-<option value="2026">Année 2026</option>
-
-        </select>
+      <div class="cta-box">
+        <strong>Expertise Scientifique &amp; Audit PV</strong>
+        Audits de performance, analyse de dégradation &amp; modélisation prédictive<br/>
+        Cabinet : <em>NovaKnowledge.int</em>
       </div>
     </div>
-  </div>
+  </header>
+
+  <main class="container">
+    <section class="kpi-grid" id="kpiGrid"></section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">1. Analyse Climatologique Mensuelle &amp; Couloir Annuel (30 Ans)</h2>
+        <span class="badge-acad">Standard Académique • Reproductible pvlib</span>
+      </div>
+
+      <div class="controls-bar">
+        <div class="ctrl-item">
+          <label><span>Âge du système</span><span id="lblAge">10 ans</span></label>
+          <input type="range" id="rngAge" min="0" max="30" step="1" value="10" />
+        </div>
+        <div class="ctrl-item">
+          <label><span>Dégradation annuelle</span><span id="lblRate">0.50 %/an</span></label>
+          <input type="range" id="rngRate" min="0" max="5" step="0.05" value="0.50" />
+        </div>
+        <div class="ctrl-item">
+          <label><span>Focus année</span><span id="lblYear">Toutes</span></label>
+          <input type="range" id="rngYear" min="2011" max="2026" step="1" value="2011" />
+        </div>
+        <div class="ctrl-item">
+          <label><span>Sélection</span><span>&nbsp;</span></label>
+          <div class="btn-row">
+            <button class="btn active" id="btnAll">Toutes années</button>
+            <button class="btn" id="btnReset">Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div id="chartMonth" class="chart-box"></div>
+        <div id="chartYear" class="chart-box"></div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-box" id="boxMetricsMonth"></div>
+        <div class="metric-box" id="boxMetricsYear"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">2. Table Annuelle de Prévision (30 Ans dès Mise en Service)</h2>
+        <span class="badge-acad">Couloir [Min, Max] Dégressif</span>
+      </div>
+      <div class="table-wrap">
+        <table class="forecast">
+          <thead>
+            <tr>
+              <th>Âge</th>
+              <th>Année</th>
+              <th>Min (kWh)</th>
+              <th>Moy (kWh)</th>
+              <th>Max (kWh)</th>
+              <th>Cumul Moy (kWh)</th>
+              <th>Réel (kWh)</th>
+            </tr>
+          </thead>
+          <tbody id="forecastTbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">3. Protocole Méthodologique &amp; Hypothèses d'Ingénierie</h2>
+        <span class="badge-acad">Traçabilité &amp; Limites</span>
+      </div>
+      <div class="method-grid">
+        <div class="method-card">
+          <h4>Source Radiative &amp; Géométrie</h4>
+          <p>Données horaires <strong>PVGIS-SARAH3</strong> (2005–2023), transposition POA, angle d'incidence (AOI) et pertes optiques directes modélisées par ASHRAE (<em>b = 0.05</em>).</p>
+        </div>
+        <div class="method-card">
+          <h4>Modèle Thermique &amp; Conversion</h4>
+          <p>Température cellule SAPM (<em>open_rack_glass_glass</em>), &gamma;<sub>pdc</sub> = -0.35 %/°C, pertes statiques PVWatts et rendement onduleur nominal de 96 %.</p>
+        </div>
+        <div class="method-card">
+          <h4>Diagnostic d'Écart</h4>
+          <p>L'enveloppe [Min, Max] capture la variabilité interannuelle climatique. Un écart hors couloir oriente le diagnostic vers l'ombrage, la salissure ou la disponibilité.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>NovaKnowledge.int — Audit &amp; Modélisation Photovoltaïque</footer>
 
   <script>
-    const DATA = {"months": ["Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c"], "mean_ac": [91.80701283988877, 137.71910993243014, 245.14820339928562, 313.46939228764705, 354.5094251252065, 386.92035340723504, 396.14358703805647, 348.662336016865, 277.5564798584548, 188.831370040109, 106.56716757909598, 76.23722782972715], "model_min": [70.60245153913493, 96.91657928160024, 167.9523339311562, 248.3054585788548, 239.91582360215259, 299.16711683324985, 307.89282293680463, 290.11386764304115, 236.33754990394237, 135.17341280096574, 69.48267397050067, 47.87628253250062], "model_max": [129.15941531496674, 183.04132996665427, 325.67901811283394, 416.402373556472, 431.3047888666243, 459.9773696504845, 485.70483809891897, 397.67574821476586, 327.9507236325835, 240.69241445209911, 153.10051795198814, 129.80055197374787], "real_x": ["Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c", "Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct"], "real_y": [81.0, 119.0, 276.0, 367.0, 435.0, 348.0, 363.0, 349.0, 295.0, 197.0, 116.0, 23.0, 67.0, 170.0, 323.0, 306.0, 351.0, 371.0, 369.0, 372.0, 250.0, 174.0, 83.0, 26.0, 49.0, 64.0, 187.0, 257.0, 238.0, 366.0, 423.0, 357.0, 234.0, 148.0, 64.0, 69.0, 76.0, 105.0, 266.0, 261.0, 360.0, 417.0, 276.0, 275.0, 288.0, 177.0, 76.0, 15.0, 39.0, 100.0, 227.0, 318.0, 313.0, 366.0, 394.0, 309.0, 240.0, 167.0, 94.0, 72.0, 40.0, 64.0, 200.0, 211.0, 263.0, 265.0, 376.0, 318.0, 260.0, 127.0, 86.0, 83.0, 18.0, 100.0, 205.0, 312.0, 348.0, 363.0, 326.0, 325.0, 329.0, 14.0, 34.0, 19.0, 32.0, 103.0, 132.0, 255.0, 149.0, 524.0, 294.0, 409.0, 266.0, 182.0, 88.0, 35.0, 27.0, 135.0, 190.0, 224.0, 305.0, 371.0, 383.0, 328.0, 273.0, 104.0, 41.0, 50.0, 62.0, 91.0, 207.0, 352.0, 368.0, 310.0, 401.0, 304.0, 267.0, 89.0, 70.0, 52.0, 23.0, 79.0, 197.0, 296.0, 282.0, 325.0, 307.0, 248.0, 271.0, 198.0, 51.0, 42.0, 57.0, 99.0, 246.0, 271.0, 368.0, 374.0, 440.0, 416.0, 169.0, 151.0, 53.0, 28.0, 20.0, 96.0, 74.0, 201.0, 316.0, 383.0, 325.0, 256.0, 258.0, 157.0, 34.0, 20.0, 45.0, 51.0, 118.0, 199.0, 223.0, 246.0, 286.0, 345.0, 154.0, 93.0, 58.0, 13.0, 47.0, 94.0, 165.0, 249.0, 289.0, 346.0, 266.0, 336.0, 148.0, 123.0, 55.0, 44.0, 25.0, 50.0, 164.0, 274.0, 295.0, 328.0, 382.0, 269.0, 257.0, 127.0], "real_yr": [2011, 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2012, 2012, 2012, 2012, 2012, 2012, 2012, 2012, 2012, 2012, 2012, 2012, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2013, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2014, 2015, 2015, 2015, 2015, 2015, 2015, 2015, 2015, 2015, 2015, 2015, 2015, 2016, 2016, 2016, 2016, 2016, 2016, 2016, 2016, 2016, 2016, 2016, 2016, 2017, 2017, 2017, 2017, 2017, 2017, 2017, 2017, 2017, 2017, 2017, 2017, 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2019, 2019, 2019, 2019, 2019, 2019, 2019, 2019, 2019, 2019, 2019, 2019, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2021, 2021, 2021, 2021, 2021, 2021, 2021, 2021, 2021, 2021, 2021, 2021, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2023, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2024, 2025, 2025, 2025, 2025, 2025, 2025, 2025, 2025, 2025, 2025, 2025, 2025, 2026, 2026, 2026, 2026, 2026, 2026, 2026, 2026, 2026, 2026], "real_txt": ["Jan 2011 : 81.0 kWh", "F\u00e9v 2011 : 119.0 kWh", "Mar 2011 : 276.0 kWh", "Avr 2011 : 367.0 kWh", "Mai 2011 : 435.0 kWh", "Juin 2011 : 348.0 kWh", "Juil 2011 : 363.0 kWh", "Ao\u00fbt 2011 : 349.0 kWh", "Sep 2011 : 295.0 kWh", "Oct 2011 : 197.0 kWh", "Nov 2011 : 116.0 kWh", "D\u00e9c 2011 : 23.0 kWh", "Jan 2012 : 67.0 kWh", "F\u00e9v 2012 : 170.0 kWh", "Mar 2012 : 323.0 kWh", "Avr 2012 : 306.0 kWh", "Mai 2012 : 351.0 kWh", "Juin 2012 : 371.0 kWh", "Juil 2012 : 369.0 kWh", "Ao\u00fbt 2012 : 372.0 kWh", "Sep 2012 : 250.0 kWh", "Oct 2012 : 174.0 kWh", "Nov 2012 : 83.0 kWh", "D\u00e9c 2012 : 26.0 kWh", "Jan 2013 : 49.0 kWh", "F\u00e9v 2013 : 64.0 kWh", "Mar 2013 : 187.0 kWh", "Avr 2013 : 257.0 kWh", "Mai 2013 : 238.0 kWh", "Juin 2013 : 366.0 kWh", "Juil 2013 : 423.0 kWh", "Ao\u00fbt 2013 : 357.0 kWh", "Sep 2013 : 234.0 kWh", "Oct 2013 : 148.0 kWh", "Nov 2013 : 64.0 kWh", "D\u00e9c 2013 : 69.0 kWh", "Jan 2014 : 76.0 kWh", "F\u00e9v 2014 : 105.0 kWh", "Mar 2014 : 266.0 kWh", "Avr 2014 : 261.0 kWh", "Mai 2014 : 360.0 kWh", "Juin 2014 : 417.0 kWh", "Juil 2014 : 276.0 kWh", "Ao\u00fbt 2014 : 275.0 kWh", "Sep 2014 : 288.0 kWh", "Oct 2014 : 177.0 kWh", "Nov 2014 : 76.0 kWh", "D\u00e9c 2014 : 15.0 kWh", "Jan 2015 : 39.0 kWh", "F\u00e9v 2015 : 100.0 kWh", "Mar 2015 : 227.0 kWh", "Avr 2015 : 318.0 kWh", "Mai 2015 : 313.0 kWh", "Juin 2015 : 366.0 kWh", "Juil 2015 : 394.0 kWh", "Ao\u00fbt 2015 : 309.0 kWh", "Sep 2015 : 240.0 kWh", "Oct 2015 : 167.0 kWh", "Nov 2015 : 94.0 kWh", "D\u00e9c 2015 : 72.0 kWh", "Jan 2016 : 40.0 kWh", "F\u00e9v 2016 : 64.0 kWh", "Mar 2016 : 200.0 kWh", "Avr 2016 : 211.0 kWh", "Mai 2016 : 263.0 kWh", "Juin 2016 : 265.0 kWh", "Juil 2016 : 376.0 kWh", "Ao\u00fbt 2016 : 318.0 kWh", "Sep 2016 : 260.0 kWh", "Oct 2016 : 127.0 kWh", "Nov 2016 : 86.0 kWh", "D\u00e9c 2016 : 83.0 kWh", "Jan 2017 : 18.0 kWh", "F\u00e9v 2017 : 100.0 kWh", "Mar 2017 : 205.0 kWh", "Avr 2017 : 312.0 kWh", "Mai 2017 : 348.0 kWh", "Juin 2017 : 363.0 kWh", "Juil 2017 : 326.0 kWh", "Ao\u00fbt 2017 : 325.0 kWh", "Sep 2017 : 329.0 kWh", "Oct 2017 : 14.0 kWh", "Nov 2017 : 34.0 kWh", "D\u00e9c 2017 : 19.0 kWh", "Jan 2018 : 32.0 kWh", "F\u00e9v 2018 : 103.0 kWh", "Mar 2018 : 132.0 kWh", "Avr 2018 : 255.0 kWh", "Mai 2018 : 149.0 kWh", "Juin 2018 : 524.0 kWh", "Juil 2018 : 294.0 kWh", "Ao\u00fbt 2018 : 409.0 kWh", "Sep 2018 : 266.0 kWh", "Oct 2018 : 182.0 kWh", "Nov 2018 : 88.0 kWh", "D\u00e9c 2018 : 35.0 kWh", "Jan 2019 : 27.0 kWh", "F\u00e9v 2019 : 135.0 kWh", "Mar 2019 : 190.0 kWh", "Avr 2019 : 224.0 kWh", "Mai 2019 : 305.0 kWh", "Juin 2019 : 371.0 kWh", "Juil 2019 : 383.0 kWh", "Ao\u00fbt 2019 : 328.0 kWh", "Sep 2019 : 273.0 kWh", "Oct 2019 : 104.0 kWh", "Nov 2019 : 41.0 kWh", "D\u00e9c 2019 : 50.0 kWh", "Jan 2020 : 62.0 kWh", "F\u00e9v 2020 : 91.0 kWh", "Mar 2020 : 207.0 kWh", "Avr 2020 : 352.0 kWh", "Mai 2020 : 368.0 kWh", "Juin 2020 : 310.0 kWh", "Juil 2020 : 401.0 kWh", "Ao\u00fbt 2020 : 304.0 kWh", "Sep 2020 : 267.0 kWh", "Oct 2020 : 89.0 kWh", "Nov 2020 : 70.0 kWh", "D\u00e9c 2020 : 52.0 kWh", "Jan 2021 : 23.0 kWh", "F\u00e9v 2021 : 79.0 kWh", "Mar 2021 : 197.0 kWh", "Avr 2021 : 296.0 kWh", "Mai 2021 : 282.0 kWh", "Juin 2021 : 325.0 kWh", "Juil 2021 : 307.0 kWh", "Ao\u00fbt 2021 : 248.0 kWh", "Sep 2021 : 271.0 kWh", "Oct 2021 : 198.0 kWh", "Nov 2021 : 51.0 kWh", "D\u00e9c 2021 : 42.0 kWh", "Jan 2022 : 57.0 kWh", "F\u00e9v 2022 : 99.0 kWh", "Mar 2022 : 246.0 kWh", "Avr 2022 : 271.0 kWh", "Mai 2022 : 368.0 kWh", "Juin 2022 : 374.0 kWh", "Juil 2022 : 440.0 kWh", "Ao\u00fbt 2022 : 416.0 kWh", "Sep 2022 : 169.0 kWh", "Oct 2022 : 151.0 kWh", "Nov 2022 : 53.0 kWh", "D\u00e9c 2022 : 28.0 kWh", "Jan 2023 : 20.0 kWh", "F\u00e9v 2023 : 96.0 kWh", "Mar 2023 : 74.0 kWh", "Avr 2023 : 201.0 kWh", "Mai 2023 : 316.0 kWh", "Juin 2023 : 383.0 kWh", "Juil 2023 : 325.0 kWh", "Ao\u00fbt 2023 : 256.0 kWh", "Sep 2023 : 258.0 kWh", "Oct 2023 : 157.0 kWh", "Nov 2023 : 34.0 kWh", "D\u00e9c 2023 : 20.0 kWh", "Jan 2024 : 45.0 kWh", "F\u00e9v 2024 : 51.0 kWh", "Mar 2024 : 118.0 kWh", "Avr 2024 : 199.0 kWh", "Mai 2024 : 223.0 kWh", "Juin 2024 : 246.0 kWh", "Juil 2024 : 286.0 kWh", "Ao\u00fbt 2024 : 345.0 kWh", "Sep 2024 : 154.0 kWh", "Oct 2024 : 93.0 kWh", "Nov 2024 : 58.0 kWh", "D\u00e9c 2024 : 13.0 kWh", "Jan 2025 : 47.0 kWh", "F\u00e9v 2025 : 94.0 kWh", "Mar 2025 : 165.0 kWh", "Avr 2025 : 249.0 kWh", "Mai 2025 : 289.0 kWh", "Juin 2025 : 346.0 kWh", "Juil 2025 : 266.0 kWh", "Ao\u00fbt 2025 : 336.0 kWh", "Sep 2025 : 148.0 kWh", "Oct 2025 : 123.0 kWh", "Nov 2025 : 55.0 kWh", "D\u00e9c 2025 : 44.0 kWh", "Jan 2026 : 25.0 kWh", "F\u00e9v 2026 : 50.0 kWh", "Mar 2026 : 164.0 kWh", "Avr 2026 : 274.0 kWh", "Mai 2026 : 295.0 kWh", "Juin 2026 : 328.0 kWh", "Juil 2026 : 382.0 kWh", "Ao\u00fbt 2026 : 269.0 kWh", "Sep 2026 : 257.0 kWh", "Oct 2026 : 127.0 kWh"], "years_list": [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]};
-    const plotDiv = document.getElementById('clim_plot');
-    const ageSlider = document.getElementById('ageSlider');
-    const rateSlider = document.getElementById('rateSlider');
-    const yearSelect = document.getElementById('yearSelect');
-    const ageVal = document.getElementById('ageVal');
-    const rateVal = document.getElementById('rateVal');
+    const D = {"meta": {"site": "Site 0 \u2014 \u00c9loyes (Vosges, France)", "lat": 48.1, "lon": 6.6, "alt": 373.0, "kwp": 2.88, "tilt": 20.0, "azimuth": 240.0, "period_pvgis": "2005\u20132023", "start_op_year": 2011, "current_year": 2026, "forecast_years": 30, "init_age": 10, "init_rate": 0.005}, "months": ["Jan", "F\u00e9v", "Mar", "Avr", "Mai", "Juin", "Juil", "Ao\u00fbt", "Sep", "Oct", "Nov", "D\u00e9c"], "monthly_mean": [91.807, 137.719, 245.148, 313.469, 354.509, 386.92, 396.144, 348.662, 277.556, 188.831, 106.567, 76.237], "monthly_std": [18.66, 26.63, 42.784, 51.228, 52.554, 46.014, 46.2, 32.027, 22.369, 25.583, 22.209, 21.927], "monthly_min": [70.602, 96.917, 167.952, 248.305, 239.916, 299.167, 307.893, 290.114, 236.338, 135.173, 69.483, 47.876], "monthly_max": [129.159, 183.041, 325.679, 416.402, 431.305, 459.977, 485.705, 397.676, 327.951, 240.692, 153.101, 129.801], "ann_mean": 2923.572, "ann_min": 2669.208, "ann_max": 3255.351, "op_ages": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], "op_years": [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041], "real_pts": [{"x": 0, "y": 81.0, "year": 2011, "month": 1}, {"x": 1, "y": 119.0, "year": 2011, "month": 2}, {"x": 2, "y": 276.0, "year": 2011, "month": 3}, {"x": 3, "y": 367.0, "year": 2011, "month": 4}, {"x": 4, "y": 435.0, "year": 2011, "month": 5}, {"x": 5, "y": 348.0, "year": 2011, "month": 6}, {"x": 6, "y": 363.0, "year": 2011, "month": 7}, {"x": 7, "y": 349.0, "year": 2011, "month": 8}, {"x": 8, "y": 295.0, "year": 2011, "month": 9}, {"x": 9, "y": 197.0, "year": 2011, "month": 10}, {"x": 10, "y": 116.0, "year": 2011, "month": 11}, {"x": 11, "y": 23.0, "year": 2011, "month": 12}, {"x": 0, "y": 67.0, "year": 2012, "month": 1}, {"x": 1, "y": 170.0, "year": 2012, "month": 2}, {"x": 2, "y": 323.0, "year": 2012, "month": 3}, {"x": 3, "y": 306.0, "year": 2012, "month": 4}, {"x": 4, "y": 351.0, "year": 2012, "month": 5}, {"x": 5, "y": 371.0, "year": 2012, "month": 6}, {"x": 6, "y": 369.0, "year": 2012, "month": 7}, {"x": 7, "y": 372.0, "year": 2012, "month": 8}, {"x": 8, "y": 250.0, "year": 2012, "month": 9}, {"x": 9, "y": 174.0, "year": 2012, "month": 10}, {"x": 10, "y": 83.0, "year": 2012, "month": 11}, {"x": 11, "y": 26.0, "year": 2012, "month": 12}, {"x": 0, "y": 49.0, "year": 2013, "month": 1}, {"x": 1, "y": 64.0, "year": 2013, "month": 2}, {"x": 2, "y": 187.0, "year": 2013, "month": 3}, {"x": 3, "y": 257.0, "year": 2013, "month": 4}, {"x": 4, "y": 238.0, "year": 2013, "month": 5}, {"x": 5, "y": 366.0, "year": 2013, "month": 6}, {"x": 6, "y": 423.0, "year": 2013, "month": 7}, {"x": 7, "y": 357.0, "year": 2013, "month": 8}, {"x": 8, "y": 234.0, "year": 2013, "month": 9}, {"x": 9, "y": 148.0, "year": 2013, "month": 10}, {"x": 10, "y": 64.0, "year": 2013, "month": 11}, {"x": 11, "y": 69.0, "year": 2013, "month": 12}, {"x": 0, "y": 76.0, "year": 2014, "month": 1}, {"x": 1, "y": 105.0, "year": 2014, "month": 2}, {"x": 2, "y": 266.0, "year": 2014, "month": 3}, {"x": 3, "y": 261.0, "year": 2014, "month": 4}, {"x": 4, "y": 360.0, "year": 2014, "month": 5}, {"x": 5, "y": 417.0, "year": 2014, "month": 6}, {"x": 6, "y": 276.0, "year": 2014, "month": 7}, {"x": 7, "y": 275.0, "year": 2014, "month": 8}, {"x": 8, "y": 288.0, "year": 2014, "month": 9}, {"x": 9, "y": 177.0, "year": 2014, "month": 10}, {"x": 10, "y": 76.0, "year": 2014, "month": 11}, {"x": 11, "y": 15.0, "year": 2014, "month": 12}, {"x": 0, "y": 39.0, "year": 2015, "month": 1}, {"x": 1, "y": 100.0, "year": 2015, "month": 2}, {"x": 2, "y": 227.0, "year": 2015, "month": 3}, {"x": 3, "y": 318.0, "year": 2015, "month": 4}, {"x": 4, "y": 313.0, "year": 2015, "month": 5}, {"x": 5, "y": 366.0, "year": 2015, "month": 6}, {"x": 6, "y": 394.0, "year": 2015, "month": 7}, {"x": 7, "y": 309.0, "year": 2015, "month": 8}, {"x": 8, "y": 240.0, "year": 2015, "month": 9}, {"x": 9, "y": 167.0, "year": 2015, "month": 10}, {"x": 10, "y": 94.0, "year": 2015, "month": 11}, {"x": 11, "y": 72.0, "year": 2015, "month": 12}, {"x": 0, "y": 40.0, "year": 2016, "month": 1}, {"x": 1, "y": 64.0, "year": 2016, "month": 2}, {"x": 2, "y": 200.0, "year": 2016, "month": 3}, {"x": 3, "y": 211.0, "year": 2016, "month": 4}, {"x": 4, "y": 263.0, "year": 2016, "month": 5}, {"x": 5, "y": 265.0, "year": 2016, "month": 6}, {"x": 6, "y": 376.0, "year": 2016, "month": 7}, {"x": 7, "y": 318.0, "year": 2016, "month": 8}, {"x": 8, "y": 260.0, "year": 2016, "month": 9}, {"x": 9, "y": 127.0, "year": 2016, "month": 10}, {"x": 10, "y": 86.0, "year": 2016, "month": 11}, {"x": 11, "y": 83.0, "year": 2016, "month": 12}, {"x": 0, "y": 18.0, "year": 2017, "month": 1}, {"x": 1, "y": 100.0, "year": 2017, "month": 2}, {"x": 2, "y": 205.0, "year": 2017, "month": 3}, {"x": 3, "y": 312.0, "year": 2017, "month": 4}, {"x": 4, "y": 348.0, "year": 2017, "month": 5}, {"x": 5, "y": 363.0, "year": 2017, "month": 6}, {"x": 6, "y": 326.0, "year": 2017, "month": 7}, {"x": 7, "y": 325.0, "year": 2017, "month": 8}, {"x": 8, "y": 329.0, "year": 2017, "month": 9}, {"x": 9, "y": 14.0, "year": 2017, "month": 10}, {"x": 10, "y": 34.0, "year": 2017, "month": 11}, {"x": 11, "y": 19.0, "year": 2017, "month": 12}, {"x": 0, "y": 32.0, "year": 2018, "month": 1}, {"x": 1, "y": 103.0, "year": 2018, "month": 2}, {"x": 2, "y": 132.0, "year": 2018, "month": 3}, {"x": 3, "y": 255.0, "year": 2018, "month": 4}, {"x": 4, "y": 149.0, "year": 2018, "month": 5}, {"x": 5, "y": 524.0, "year": 2018, "month": 6}, {"x": 6, "y": 294.0, "year": 2018, "month": 7}, {"x": 7, "y": 409.0, "year": 2018, "month": 8}, {"x": 8, "y": 266.0, "year": 2018, "month": 9}, {"x": 9, "y": 182.0, "year": 2018, "month": 10}, {"x": 10, "y": 88.0, "year": 2018, "month": 11}, {"x": 11, "y": 35.0, "year": 2018, "month": 12}, {"x": 0, "y": 27.0, "year": 2019, "month": 1}, {"x": 1, "y": 135.0, "year": 2019, "month": 2}, {"x": 2, "y": 190.0, "year": 2019, "month": 3}, {"x": 3, "y": 224.0, "year": 2019, "month": 4}, {"x": 4, "y": 305.0, "year": 2019, "month": 5}, {"x": 5, "y": 371.0, "year": 2019, "month": 6}, {"x": 6, "y": 383.0, "year": 2019, "month": 7}, {"x": 7, "y": 328.0, "year": 2019, "month": 8}, {"x": 8, "y": 273.0, "year": 2019, "month": 9}, {"x": 9, "y": 104.0, "year": 2019, "month": 10}, {"x": 10, "y": 41.0, "year": 2019, "month": 11}, {"x": 11, "y": 50.0, "year": 2019, "month": 12}, {"x": 0, "y": 62.0, "year": 2020, "month": 1}, {"x": 1, "y": 91.0, "year": 2020, "month": 2}, {"x": 2, "y": 207.0, "year": 2020, "month": 3}, {"x": 3, "y": 352.0, "year": 2020, "month": 4}, {"x": 4, "y": 368.0, "year": 2020, "month": 5}, {"x": 5, "y": 310.0, "year": 2020, "month": 6}, {"x": 6, "y": 401.0, "year": 2020, "month": 7}, {"x": 7, "y": 304.0, "year": 2020, "month": 8}, {"x": 8, "y": 267.0, "year": 2020, "month": 9}, {"x": 9, "y": 89.0, "year": 2020, "month": 10}, {"x": 10, "y": 70.0, "year": 2020, "month": 11}, {"x": 11, "y": 52.0, "year": 2020, "month": 12}, {"x": 0, "y": 23.0, "year": 2021, "month": 1}, {"x": 1, "y": 79.0, "year": 2021, "month": 2}, {"x": 2, "y": 197.0, "year": 2021, "month": 3}, {"x": 3, "y": 296.0, "year": 2021, "month": 4}, {"x": 4, "y": 282.0, "year": 2021, "month": 5}, {"x": 5, "y": 325.0, "year": 2021, "month": 6}, {"x": 6, "y": 307.0, "year": 2021, "month": 7}, {"x": 7, "y": 248.0, "year": 2021, "month": 8}, {"x": 8, "y": 271.0, "year": 2021, "month": 9}, {"x": 9, "y": 198.0, "year": 2021, "month": 10}, {"x": 10, "y": 51.0, "year": 2021, "month": 11}, {"x": 11, "y": 42.0, "year": 2021, "month": 12}, {"x": 0, "y": 57.0, "year": 2022, "month": 1}, {"x": 1, "y": 99.0, "year": 2022, "month": 2}, {"x": 2, "y": 246.0, "year": 2022, "month": 3}, {"x": 3, "y": 271.0, "year": 2022, "month": 4}, {"x": 4, "y": 368.0, "year": 2022, "month": 5}, {"x": 5, "y": 374.0, "year": 2022, "month": 6}, {"x": 6, "y": 440.0, "year": 2022, "month": 7}, {"x": 7, "y": 416.0, "year": 2022, "month": 8}, {"x": 8, "y": 169.0, "year": 2022, "month": 9}, {"x": 9, "y": 151.0, "year": 2022, "month": 10}, {"x": 10, "y": 53.0, "year": 2022, "month": 11}, {"x": 11, "y": 28.0, "year": 2022, "month": 12}, {"x": 0, "y": 20.0, "year": 2023, "month": 1}, {"x": 1, "y": 96.0, "year": 2023, "month": 2}, {"x": 2, "y": 74.0, "year": 2023, "month": 3}, {"x": 3, "y": 201.0, "year": 2023, "month": 4}, {"x": 4, "y": 316.0, "year": 2023, "month": 5}, {"x": 5, "y": 383.0, "year": 2023, "month": 6}, {"x": 6, "y": 325.0, "year": 2023, "month": 7}, {"x": 7, "y": 256.0, "year": 2023, "month": 8}, {"x": 8, "y": 258.0, "year": 2023, "month": 9}, {"x": 9, "y": 157.0, "year": 2023, "month": 10}, {"x": 10, "y": 34.0, "year": 2023, "month": 11}, {"x": 11, "y": 20.0, "year": 2023, "month": 12}, {"x": 0, "y": 45.0, "year": 2024, "month": 1}, {"x": 1, "y": 51.0, "year": 2024, "month": 2}, {"x": 2, "y": 118.0, "year": 2024, "month": 3}, {"x": 3, "y": 199.0, "year": 2024, "month": 4}, {"x": 4, "y": 223.0, "year": 2024, "month": 5}, {"x": 5, "y": 246.0, "year": 2024, "month": 6}, {"x": 6, "y": 286.0, "year": 2024, "month": 7}, {"x": 7, "y": 345.0, "year": 2024, "month": 8}, {"x": 8, "y": 154.0, "year": 2024, "month": 9}, {"x": 9, "y": 93.0, "year": 2024, "month": 10}, {"x": 10, "y": 58.0, "year": 2024, "month": 11}, {"x": 11, "y": 13.0, "year": 2024, "month": 12}, {"x": 0, "y": 47.0, "year": 2025, "month": 1}, {"x": 1, "y": 94.0, "year": 2025, "month": 2}, {"x": 2, "y": 165.0, "year": 2025, "month": 3}, {"x": 3, "y": 249.0, "year": 2025, "month": 4}, {"x": 4, "y": 289.0, "year": 2025, "month": 5}, {"x": 5, "y": 346.0, "year": 2025, "month": 6}, {"x": 6, "y": 266.0, "year": 2025, "month": 7}, {"x": 7, "y": 336.0, "year": 2025, "month": 8}, {"x": 8, "y": 148.0, "year": 2025, "month": 9}, {"x": 9, "y": 123.0, "year": 2025, "month": 10}, {"x": 10, "y": 55.0, "year": 2025, "month": 11}, {"x": 11, "y": 44.0, "year": 2025, "month": 12}, {"x": 0, "y": 25.0, "year": 2026, "month": 1}, {"x": 1, "y": 50.0, "year": 2026, "month": 2}, {"x": 2, "y": 164.0, "year": 2026, "month": 3}, {"x": 3, "y": 274.0, "year": 2026, "month": 4}, {"x": 4, "y": 295.0, "year": 2026, "month": 5}, {"x": 5, "y": 328.0, "year": 2026, "month": 6}, {"x": 6, "y": 382.0, "year": 2026, "month": 7}, {"x": 7, "y": 269.0, "year": 2026, "month": 8}, {"x": 8, "y": 257.0, "year": 2026, "month": 9}, {"x": 9, "y": 127.0, "year": 2026, "month": 10}], "real_years": [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "real_annual": [2969.0, 2862.0, 2456.0, 2592.0, 2639.0, 2293.0, 2393.0, 2469.0, 2431.0, 2573.0, 2319.0, 2672.0, 2140.0, 1831.0, 2162.0, 2171.0], "real_months_count": [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 10], "real_matrix_mask": [[true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, false, false]]};
+    let state = { age: D.meta.init_age, rate: D.meta.init_rate, year: D.meta.start_op_year, allYears: true };
 
-    function updateClimPlot() {
-      const y = parseInt(ageSlider.value, 10);
-      const rPct = parseFloat(rateSlider.value);
-      const r = rPct / 100.0;
-      const yrSel = yearSelect.value;
+    function renderKPIs() {
+      const cum30 = D.op_ages.reduce((acc, a) => acc + D.ann_mean * Math.pow(1 - state.rate, a), 0);
+      const kpis = [
+        { label: "Puissance Crête", val: `${D.meta.kwp.toFixed(2)} kWc`, sub: `Tilt ${D.meta.tilt}° • Azimut ${D.meta.azimuth}°` },
+        { label: "Moyenne Annuelle Modèle", val: `${Math.round(D.ann_mean).toLocaleString("fr-FR")} kWh/an`, sub: `[${Math.round(D.ann_min)} – ${Math.round(D.ann_max)}] kWh` },
+        { label: "Horizon Couloir", val: `${D.meta.start_op_year}–${D.op_years[D.op_years.length - 1]}`, sub: `${D.meta.forecast_years} ans dès mise en service` },
+        { label: "Cumul Moyen 30 Ans", val: `${Math.round(cum30).toLocaleString("fr-FR")} kWh`, sub: `Taux ${(state.rate * 100).toFixed(2)} %/an` }
+      ];
+      document.getElementById("kpiGrid").innerHTML = kpis.map(k => `<div class="kpi-card"><div class="kpi-label">${k.label}</div><div class="kpi-val">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join("");
+    }
 
-      ageVal.textContent = y;
-      rateVal.textContent = rPct.toFixed(2);
+    function computeMetrics(newMin, newMax, factorAge) {
+      const obsPts = state.allYears ? D.real_pts : D.real_pts.filter(p => p.year === state.year);
+      let htmlM = `<h4>Métriques Mensuelles (${state.allYears ? "Toutes" : state.year}, n=${obsPts.length}m)</h4>`;
+      if (obsPts.length === 0) {
+        htmlM += `<div>Aucune donnée.</div>`;
+      } else {
+        const errs = obsPts.map(p => p.y - (D.monthly_mean[p.x] * factorAge));
+        const mbe = errs.reduce((a, b) => a + b, 0) / errs.length;
+        const rmse = Math.sqrt(errs.reduce((a, b) => a + b * b, 0) / errs.length);
+        const meanObs = obsPts.reduce((a, b) => a + b.y, 0) / obsPts.length;
+        const mbePct = meanObs !== 0 ? (mbe / meanObs) * 100 : 0;
+        const nrmsePct = meanObs !== 0 ? (rmse / meanObs) * 100 : 0;
+        const inBand = obsPts.filter(p => p.y >= newMin[p.x] && p.y <= newMax[p.x]).length;
+        htmlM += `<div>• <strong>MBE</strong> : ${mbe >= 0 ? "+" : ""}${mbe.toFixed(1)} kWh (${mbePct >= 0 ? "+" : ""}${mbePct.toFixed(1)}%)</div><div>• <strong>RMSE</strong> : ${rmse.toFixed(1)} kWh (${nrmsePct.toFixed(1)}%)</div><div>• <strong>Enveloppe</strong> : ${Math.round((inBand / obsPts.length) * 100)}% dans [Min, Max]</div>`;
+      }
+      document.getElementById("boxMetricsMonth").innerHTML = htmlM;
 
-      const factor = Math.pow(1.0 - r, y);
-      const newMean = DATA.mean_ac.map(v => v * factor);
-      const newMin = DATA.model_min.map(v => v * factor);
-      const newMax = DATA.model_max.map(v => v * factor);
-
-      const inX = [], inY = [], inTxt = [];
-      const outX = [], outY = [], outTxt = [];
-      const bgX = [], bgY = [], bgTxt = [];
-
-      for (let i = 0; i < DATA.real_y.length; i++) {
-        const mStr = DATA.real_x[i];
-        const mIdx = DATA.months.indexOf(mStr);
-        const val = DATA.real_y[i];
-        const yr = DATA.real_yr[i];
-        const txt = DATA.real_txt[i];
-
-        if (yrSel === "ALL" || yr === parseInt(yrSel, 10)) {
-          if (val >= newMin[mIdx] && val <= newMax[mIdx]) {
-            inX.push(mStr); inY.push(val); inTxt.push(txt);
-          } else {
-            outX.push(mStr); outY.push(val); outTxt.push(txt);
+      const compIdx = [];
+      for (let i = 0; i < D.real_years.length; i++) {
+        if (D.real_months_count[i] === 12 && D.real_years[i] >= D.meta.start_op_year && D.real_annual[i] !== null) compIdx.push(i);
+      }
+      let htmlY = "";
+      if (state.allYears) {
+        const errsA = compIdx.map(i => D.real_annual[i] - (D.ann_mean * Math.pow(1 - state.rate, Math.max(0, D.real_years[i] - D.meta.start_op_year))));
+        const mbeA = errsA.reduce((a, b) => a + b, 0) / errsA.length;
+        const rmseA = Math.sqrt(errsA.reduce((a, b) => a + b * b, 0) / errsA.length);
+        const meanObsA = compIdx.reduce((a, i) => a + D.real_annual[i], 0) / compIdx.length;
+        htmlY = `<h4>Métriques Annuelles (12m, n=${compIdx.length}a)</h4><div>• <strong>MBE</strong> : ${mbeA >= 0 ? "+" : ""}${Math.round(mbeA)} kWh (${((mbeA/meanObsA)*100).toFixed(1)}%)</div><div>• <strong>RMSE</strong> : ${Math.round(rmseA)} kWh (${((rmseA/meanObsA)*100).toFixed(1)}%)</div>`;
+      } else {
+        const idxY = D.real_years.indexOf(state.year);
+        const ageY = Math.max(0, state.year - D.meta.start_op_year);
+        const degY = Math.pow(1 - state.rate, ageY);
+        if (idxY >= 0 && D.real_annual[idxY] !== null) {
+          const obsVal = D.real_annual[idxY];
+          const nM = D.real_months_count[idxY];
+          let modRef = D.ann_mean * degY;
+          if (nM < 12) {
+            const maskM = D.real_matrix_mask[idxY];
+            let sumM = 0;
+            for (let m = 0; m < 12; m++) if (maskM[m]) sumM += D.monthly_mean[m];
+            modRef = sumM * degY;
           }
+          const diff = obsVal - modRef;
+          htmlY = `<h4>Bilan ${state.year} (${nM}m, ${ageY}a)</h4><div>• <strong>Réel</strong> : ${Math.round(obsVal)} kWh | <strong>Modèle</strong> : ${Math.round(modRef)} kWh</div><div>• <strong>Écart</strong> : ${diff >= 0 ? "+" : ""}${Math.round(diff)} kWh (${((diff/modRef)*100).toFixed(1)}%)</div>`;
         } else {
-          bgX.push(mStr); bgY.push(val); bgTxt.push(txt);
+          htmlY = `<h4>Bilan ${state.year}</h4><div>Aucune donnée.</div>`;
+        }
+      }
+      document.getElementById("boxMetricsYear").innerHTML = htmlY;
+    }
+
+    function renderTable() {
+      const sumMeanMonth = D.monthly_mean.reduce((a, b) => a + b, 0);
+      let cum = 0;
+      let rows = "";
+      for (let i = 0; i < D.op_ages.length; i++) {
+        const age = D.op_ages[i], yr = D.op_years[i], f = Math.pow(1 - state.rate, age);
+        const minV = D.ann_min * f, meanV = D.ann_mean * f, maxV = D.ann_max * f;
+        cum += meanV;
+        let realCell = "—", clsCell = "";
+        const rIdx = D.real_years.indexOf(yr);
+        if (rIdx >= 0 && D.real_annual[rIdx] !== null) {
+          const obsV = D.real_annual[rIdx], nM = D.real_months_count[rIdx];
+          if (nM === 12) {
+            realCell = Math.round(obsV).toLocaleString("fr-FR");
+            clsCell = (obsV >= minV && obsV <= maxV) ? "st-in" : (obsV < minV ? "st-below" : "st-above");
+          } else {
+            const maskM = D.real_matrix_mask[rIdx];
+            let sumM = 0;
+            for (let m = 0; m < 12; m++) if (maskM[m]) sumM += D.monthly_mean[m];
+            const share = sumMeanMonth !== 0 ? sumM / sumMeanMonth : nM / 12.0;
+            const minP = minV * share, maxP = maxV * share;
+            realCell = `${Math.round(obsV).toLocaleString("fr-FR")} (${nM}m)`;
+            clsCell = (obsV >= minP && obsV <= maxP) ? "st-in" : (obsV < minP ? "st-below" : "st-above");
+          }
+        }
+        const trClass = (age === 10 || age === 20 || age === 30) ? ` class="milestone"` : "";
+        rows += `<tr${trClass}><td>${age}</td><td>${yr}</td><td>${minV.toFixed(1)}</td><td>${meanV.toFixed(1)}</td><td>${maxV.toFixed(1)}</td><td>${Math.round(cum).toLocaleString("fr-FR")}</td><td class="${clsCell}">${realCell}</td></tr>`;
+      }
+      document.getElementById("forecastTbody").innerHTML = rows;
+    }
+
+    function updateCharts() {
+      const factorAge = Math.pow(1 - state.rate, state.age);
+      const newMin = D.monthly_min.map(v => v * factorAge);
+      const newMean = D.monthly_mean.map(v => v * factorAge);
+      const newMax = D.monthly_max.map(v => v * factorAge);
+
+      const focusPts = state.allYears ? D.real_pts : D.real_pts.filter(p => p.year === state.year);
+      const bgPts = state.allYears ? [] : D.real_pts.filter(p => p.year !== state.year);
+      const inPts = focusPts.filter(p => p.y >= newMin[p.x] && p.y <= newMax[p.x]);
+      const outPts = focusPts.filter(p => p.y < newMin[p.x] || p.y > newMax[p.x]);
+
+      const monthTraces = [
+        { x: D.months, y: D.monthly_max, type: "scatter", mode: "lines", line: { width: 0 }, showlegend: false, hoverinfo: "skip" },
+        { x: D.months, y: D.monthly_min, type: "scatter", mode: "lines", fill: "tonexty", fillcolor: "rgba(31,119,180,0.14)", line: { width: 0 }, name: "Neuf Min–Max" },
+        { x: D.months, y: D.monthly_mean, type: "scatter", mode: "lines+markers", error_y: { type: "data", array: D.monthly_std, visible: true, thickness: 1, width: 3 }, line: { color: "#1f77b4", width: 2 }, marker: { size: 5 }, name: "Neuf (Moy ± SD)" },
+        { x: D.months, y: newMax, type: "scatter", mode: "lines", line: { width: 0 }, showlegend: false, hoverinfo: "skip" },
+        { x: D.months, y: newMin, type: "scatter", mode: "lines", fill: "tonexty", fillcolor: "rgba(192,57,43,0.16)", line: { width: 0 }, name: `Vieilli Min–Max (${state.age}a)` },
+        { x: D.months, y: newMean, type: "scatter", mode: "lines", line: { color: "#c0392b", width: 2.2, dash: "dash" }, name: `Vieilli Moy (${state.age}a)` },
+        { x: bgPts.map(p => D.months[p.x]), y: bgPts.map(p => p.y), mode: "markers", marker: { color: "#9ca3af", size: 6, opacity: 0.45 }, name: "Autres années" },
+        { x: inPts.map(p => D.months[p.x]), y: inPts.map(p => p.y), mode: "markers", marker: { color: "#1e7e68", size: 8, line: { color: "#111", width: 0.8 } }, name: "Réel (dans bande)" },
+        { x: outPts.map(p => D.months[p.x]), y: outPts.map(p => p.y), mode: "markers", marker: { color: "#d97706", size: 9, symbol: "triangle-up", line: { color: "#111", width: 0.8 } }, name: "Réel (hors bande)" }
+      ];
+
+      const factorsOp = D.op_ages.map(a => Math.pow(1 - state.rate, a));
+      const annMinOp = factorsOp.map(f => D.ann_min * f);
+      const annMeanOp = factorsOp.map(f => D.ann_mean * f);
+      const annMaxOp = factorsOp.map(f => D.ann_max * f);
+
+      const compYears = [], compVals = [], partYears = [], partVals = [];
+      for (let i = 0; i < D.real_years.length; i++) {
+        if (D.real_annual[i] !== null) {
+          if (D.real_months_count[i] === 12) { compYears.push(D.real_years[i]); compVals.push(D.real_annual[i]); }
+          else { partYears.push(D.real_years[i]); partVals.push(D.real_annual[i]); }
         }
       }
 
-      const titleText = (yrSel === "ALL")
-        ? "Comparaison Modèle vs Relevés Réels (Toutes les années)"
-        : `Comparaison Modèle vs Relevés Réels — Année ${yrSel}`;
+      const yearTraces = [
+        { x: D.op_years, y: annMaxOp, type: "scatter", mode: "lines", line: { width: 0 }, showlegend: false, hoverinfo: "skip" },
+        { x: D.op_years, y: annMinOp, type: "scatter", mode: "lines", fill: "tonexty", fillcolor: "rgba(192,57,43,0.15)", line: { width: 0 }, name: `Couloir (${D.meta.start_op_year}–${D.op_years[D.op_years.length-1]})` },
+        { x: D.op_years, y: annMeanOp, type: "scatter", mode: "lines", line: { color: "#c0392b", width: 2.2, dash: "dash" }, name: `Moyenne (${(state.rate*100).toFixed(2)}%/a)` },
+        { x: compYears, y: compVals, type: "scatter", mode: "lines+markers", line: { color: "#1e7e68", width: 2 }, marker: { size: 6 }, name: "Réel annuel (12m)" },
+        { x: partYears, y: partVals, type: "scatter", mode: "markers", marker: { color: "#d97706", size: 9, symbol: "diamond" }, name: "Réel partiel (2026)" }
+      ];
 
-      Plotly.restyle(plotDiv, {
-        y: [
-          newMax.concat([...newMin].reverse()),
-          newMean,
-          bgY,
-          inY,
-          outY
-        ],
-        x: [
-          DATA.months.concat([...DATA.months].reverse()),
-          DATA.months,
-          bgX,
-          inX,
-          outX
-        ],
-        text: [[], [], bgTxt, inTxt, outTxt],
-        name: [
-          `Modèle Vieilli Min–Max (${y} ans)`,
-          `Modèle Vieilli Moyen (${y} ans, ${rPct.toFixed(2)}%/an)`,
-          "Autres années (contexte)",
-          "Réel (dans bande)",
-          "Réel (hors bande)"
-        ]
-      }, [2, 3, 4, 5, 6]);
+      Plotly.react("chartMonth", monthTraces, {
+        title: state.allYears ? `Profil Mensuel — Toutes années (Âge=${state.age}a)` : `Profil Mensuel — Année ${state.year} (Âge=${state.age}a)`,
+        xaxis: { title: "Mois" }, yaxis: { title: "Énergie AC (kWh)" },
+        legend: { orientation: "h", y: -0.22 }, margin: { l: 55, r: 20, t: 48, b: 95 },
+        paper_bgcolor: "#fff", plot_bgcolor: "#fff"
+      }, { responsive: true });
 
-      Plotly.relayout(plotDiv, { title: titleText });
+      Plotly.react("chartYear", yearTraces, {
+        title: `Couloir Annuel (${D.meta.start_op_year}–${D.op_years[D.op_years.length-1]}, 30 ans)`,
+        xaxis: { title: "Année", range: [D.meta.start_op_year - 0.5, D.op_years[D.op_years.length - 1] + 0.8] },
+        yaxis: { title: "Énergie Annuelle AC (kWh)" },
+        legend: { orientation: "h", y: -0.22 }, margin: { l: 60, r: 20, t: 48, b: 95 },
+        paper_bgcolor: "#fff", plot_bgcolor: "#fff"
+      }, { responsive: true });
+
+      computeMetrics(newMin, newMax, factorAge);
+      renderTable();
+      renderKPIs();
     }
 
-    ageSlider.addEventListener('input', updateClimPlot);
-    rateSlider.addEventListener('input', updateClimPlot);
-    yearSelect.addEventListener('change', updateClimPlot);
+    const rngAge = document.getElementById("rngAge"), rngRate = document.getElementById("rngRate"), rngYear = document.getElementById("rngYear");
+    const btnAll = document.getElementById("btnAll"), btnReset = document.getElementById("btnReset");
+
+    function syncLabels() {
+      document.getElementById("lblAge").textContent = `${state.age} ans`;
+      document.getElementById("lblRate").textContent = `${(state.rate * 100).toFixed(2)} %/an`;
+      document.getElementById("lblYear").textContent = state.allYears ? "Toutes" : `${state.year}`;
+      btnAll.classList.toggle("active", state.allYears);
+    }
+
+    rngAge.addEventListener("input", () => { state.age = parseInt(rngAge.value, 10); syncLabels(); updateCharts(); });
+    rngRate.addEventListener("input", () => { state.rate = parseFloat(rngRate.value) / 100.0; syncLabels(); updateCharts(); });
+    rngYear.addEventListener("input", () => {
+      state.year = parseInt(rngYear.value, 10); state.allYears = false;
+      const syncedAge = Math.max(0, Math.min(30, state.year - D.meta.start_op_year));
+      state.age = syncedAge; rngAge.value = syncedAge; syncLabels(); updateCharts();
+    });
+    btnAll.addEventListener("click", () => { state.allYears = true; syncLabels(); updateCharts(); });
+    btnReset.addEventListener("click", () => {
+      state.age = D.meta.init_age; state.rate = D.meta.init_rate; state.year = D.meta.start_op_year; state.allYears = true;
+      rngAge.value = state.age; rngRate.value = (state.rate * 100).toFixed(2); rngYear.value = state.year;
+      syncLabels(); updateCharts();
+    });
+
+    syncLabels();
+    updateCharts();
   </script>
 </body>
 </html>
