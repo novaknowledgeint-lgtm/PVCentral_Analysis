@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PV Central par NovaKnowledge.int — Modélisation Physique &amp; Audit Photovoltaïque (Multi-Sites)</title>
-  <meta name="description" content="PV Central par NovaKnowledge.int : modélisation physique pvlib (PVGIS-SARAH3, AOI/IAM ASHRAE, SAPM), diagnostic de dégradation et projection 30 ans multi-sites." />
+  <title>PV Central (PVCentral_Analysis) par NovaKnowledge.int — Modélisation Physique &amp; Audit Photovoltaïque</title>
+  <meta name="description" content="PV Central (PVCentral_Analysis) par NovaKnowledge.int : modélisation physique pvlib (PVGIS-SARAH3, AOI/IAM ASHRAE, SAPM), diagnostic d'écart de performance et scénarios sur 30 ans multi-sites." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -509,7 +509,7 @@
       color: var(--text-secondary);
     }
 
-    /* Cartes Fonctionnalités & Bénéfices */
+    /* Cartes Fonctionnalités & Applications */
     .cards-3 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
@@ -814,8 +814,8 @@
     td.st-below { background: var(--status-low-bg) !important; color: var(--status-low-fg); font-weight: 700; }
     td.st-above { background: var(--status-high-bg) !important; color: var(--status-high-fg); font-weight: 700; }
 
-    /* Cas d'usage & Témoignages */
-    .quote-card {
+    /* Cas d'usage méthodologiques */
+    .scope-card {
       background: var(--bg-card);
       border: 1px solid var(--border-light);
       border-radius: var(--radius-lg);
@@ -826,24 +826,22 @@
       gap: 16px;
     }
 
-    .quote-text {
+    .scope-text {
       margin: 0;
       font-size: 0.94rem;
       color: var(--text-primary);
-      font-style: italic;
     }
 
-    .quote-author {
+    .scope-meta {
       font-size: 0.84rem;
       color: var(--text-secondary);
       border-top: 1px solid var(--border-light);
       padding-top: 12px;
     }
 
-    .quote-author strong {
+    .scope-meta strong {
       display: block;
       color: var(--navy-900);
-      font-style: normal;
     }
 
     /* FAQ Accordéon Natif */
@@ -896,7 +894,7 @@
       color: var(--text-secondary);
     }
 
-    /* Bloc Contact / Audit CTA */
+    /* Bloc Contact / Expertise CTA */
     .cta-banner {
       background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%);
       color: #ffffff;
@@ -980,7 +978,7 @@
   <!-- Barre de navigation -->
   <header class="navbar" role="banner">
     <div class="nav-inner">
-      <a href="#" class="brand-lockup" aria-label="PV Central par NovaKnowledge.int">
+      <a href="#" class="brand-lockup" aria-label="PV Central (PVCentral_Analysis) par NovaKnowledge.int">
         <span class="brand-icon" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="4"></circle>
@@ -992,18 +990,18 @@
         </span>
         <span>
           <span class="brand-name">PV Central</span>
-          <span class="brand-sub">par NovaKnowledge.int • Multi-Sites</span>
+          <span class="brand-sub">PVCentral_Analysis • NovaKnowledge.int</span>
         </span>
       </a>
 
       <nav class="nav-links" aria-label="Navigation principale">
-        <a href="#fonctionnalites">Fonctionnalités</a>
+        <a href="#fonctionnalites">Méthode</a>
         <a href="#atelier-pv">Simulateur &amp; Audit</a>
         <a href="#projection-30ans">Projection 30 ans</a>
         <a href="#faq">FAQ</a>
       </nav>
 
-      <a href="#contact" class="nav-cta">Demander un audit PV</a>
+      <a href="#contact" class="nav-cta">Contact &amp; Expertise</a>
     </div>
   </header>
 
@@ -1013,33 +1011,33 @@
       <div class="hero-grid">
         <div>
           <div class="hero-eyebrow">
-            <span>Modélisation Physique pvlib • Données PVGIS-SARAH3 • Multi-Sites</span>
+            <span>Chaîne Physique pvlib • Réanalyse PVGIS-SARAH3 • Multi-Sites</span>
           </div>
           <h1 id="hero-heading">
-            Anticipez la production et le <span class="accent">vieillissement réel</span> de vos centrales PV
+            Modélisez la production et évaluez la <span class="accent">dérive de performance</span> de vos centrales PV
           </h1>
           <p class="hero-lead">
-            <strong>PV Central</strong> confronte vos relevés d'exploitation à un modèle radiatif, optique et thermique rigoureux pour isoler la dégradation réelle, détecter les anomalies et sécuriser vos projections sur 30 ans sur l'ensemble de vos sites.
+            <strong>PV Central (PVCentral_Analysis)</strong> confronte vos relevés d'exploitation à une chaîne physique radiative, optique et thermique (pvlib / PVGIS-SARAH3) afin de quantifier les écarts de performance, repérer les anomalies et simuler des scénarios sur 30 ans.
           </p>
           <div class="hero-actions">
-            <a href="#atelier-pv" class="btn-primary">Explorer le simulateur multi-sites</a>
+            <a href="#atelier-pv" class="btn-primary">Ouvrir le simulateur multi-sites</a>
             <a href="#projection-30ans" class="btn-secondary">Consulter la table 30 ans</a>
           </div>
           <div class="hero-proof">
             <span>✓ Réanalyse horaire PVGIS-SARAH3 (2005–2023)</span>
-            <span>✓ Métriques MBE, RMSE &amp; enveloppe interannuelle</span>
-            <span>✓ Comparatif multi-sites (Éloyes &amp; Mare Ronde)</span>
+            <span>✓ Métriques MBE, RMSE &amp; enveloppe [Min, Max]</span>
+            <span>✓ Sites documentés : Éloyes &amp; Mare Ronde</span>
           </div>
         </div>
 
         <aside class="hero-spec-card" id="heroSpecCard" aria-label="Spécifications du site actif">
           <div class="hero-spec-header">
             <span class="hero-spec-title" id="heroSpecTitle">Site 0 — Éloyes (Vosges, France)</span>
-            <span class="pill-live" id="heroSpecBadge">2011–2026</span>
+            <span class="pill-live" id="heroSpecBadge">Suivi 2011–2026</span>
           </div>
           <div class="spec-rows">
             <div class="spec-item">
-              <span class="spec-label">Puissance installée</span>
+              <span class="spec-label">Puissance crête</span>
               <span class="spec-value mono" id="specKwp">2,88 kWc</span>
             </div>
             <div class="spec-item">
@@ -1064,14 +1062,14 @@
       <section class="kpi-grid" id="kpiGrid" aria-label="Indicateurs clés de performance"></section>
     </div>
 
-    <!-- Présentation & Fonctionnalités Principales -->
+    <!-- Présentation & Méthode Physique -->
     <section id="fonctionnalites" class="section">
       <div class="container">
         <div class="section-head">
-          <span class="section-kicker">Architecture &amp; Valeur Métier</span>
-          <h2 class="section-title">Une lecture fiable là où les moyennes brutes trompent</h2>
+          <span class="section-kicker">Architecture Physique &amp; Diagnostic</span>
+          <h2 class="section-title">Décomposer la variabilité climatique, les pertes d'exploitation et la dérive des modules</h2>
           <p class="section-desc">
-            Une baisse de production peut provenir d'une année peu ensoleillée, d'un masquage ponctuel ou d'une dérive structurelle des modules. PV Central sépare ces effets avec des modèles physiques documentés.
+            Un écart de productible annuel ou mensuel peut résulter de la variabilité météorologique, d'un masquage, d'un encrassement, d'une indisponibilité ou d'une atténuation progressive des modules. Le modèle physique distingue les paramètres explicites des écarts résiduels.
           </p>
         </div>
 
@@ -1080,9 +1078,9 @@
             <div class="icon-badge" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
             </div>
-            <h3>Modélisation Radiative &amp; Optique</h3>
+            <h3>Irradiance POA &amp; Optique AOI/IAM</h3>
             <p>
-              Irradiance dans le plan du capteur (POA) issue de PVGIS-SARAH3, position solaire et pertes d'angle d'incidence directes modélisées selon la loi d'ASHRAE.
+              Calcul de l'irradiance dans le plan incliné (POA) à partir de PVGIS-SARAH3, position solaire et modificateur d'angle d'incidence selon la loi d'ASHRAE.
             </p>
           </article>
 
@@ -1090,9 +1088,9 @@
             <div class="icon-badge" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path></svg>
             </div>
-            <h3>Thermique Cellule &amp; Conversion</h3>
+            <h3>Thermique SAPM &amp; Conversion AC</h3>
             <p>
-              Prise en compte de la température de cellule (modèle SAPM), de la sensibilité thermique en puissance et des pertes système pour estimer l'énergie AC attendue.
+              Estimation de la température de cellule (modèle SAPM), prise en compte du coefficient thermique en puissance et des pertes système pour simuler la production AC.
             </p>
           </article>
 
@@ -1100,9 +1098,9 @@
             <div class="icon-badge" aria-hidden="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
             </div>
-            <h3>Diagnostic d'Écart &amp; Couloir 30 Ans</h3>
+            <h3>Enveloppe Interannuelle &amp; Métriques</h3>
             <p>
-              Visualisation de l'enveloppe interannuelle [Min, Max] affectée d'un taux de dégradation réglable, accompagnée des métriques MBE et RMSE sur les relevés réels.
+              Confrontation des relevés réels à l'enveloppe [Min, Max] modulée par (1 − r)<sup>âge</sup>, complétée par les indicateurs MBE et RMSE et la projection sur 30 ans.
             </p>
           </article>
         </div>
@@ -1116,7 +1114,7 @@
           <span class="section-kicker">Simulateur Interactif Multi-Sites</span>
           <h2 class="section-title">Profil mensuel &amp; couloir annuel de production</h2>
           <p class="section-desc">
-            Sélectionnez un site (Éloyes ou Mare Ronde), ajustez l'âge du système, le taux de dégradation annuel ou isolez une année d'exploitation pour observer l'évolution du modèle face aux mesures terrain.
+            Sélectionnez un site (Éloyes ou Mare Ronde), ajustez l'âge du système, le taux annuel paramétré ou isolez une année d'exploitation pour comparer le modèle aux mesures terrain.
           </p>
         </div>
 
@@ -1140,7 +1138,7 @@
 
             <div class="control-group">
               <label for="rngRate">
-                <span>Dégradation annuelle</span>
+                <span>Taux annuel paramétré</span>
                 <span class="control-badge mono" id="lblRate">0.50 %/an</span>
               </label>
               <input type="range" id="rngRate" min="0" max="5" step="0.05" value="0.50" />
@@ -1180,10 +1178,10 @@
     <section id="projection-30ans" class="section">
       <div class="container">
         <div class="section-head">
-          <span class="section-kicker">Trajectoire Long Terme</span>
-          <h2 class="section-title">Table annuelle de prévision (30 ans dès mise en service)</h2>
+          <span class="section-kicker">Scénario sur 30 Ans</span>
+          <h2 class="section-title">Table annuelle de simulation (30 ans dès mise en service)</h2>
           <p class="section-desc">
-            Projection dégressive du couloir [Min, Max], de la moyenne annuelle et du cumul énergétique à partir de l'année de mise en service du site actif, confrontée aux bilans réels.
+            Projection de l'enveloppe [Min, Max], de la moyenne annuelle et du cumul énergétique à partir de l'année de mise en service du site actif, confrontée aux bilans réels enregistrés.
           </p>
         </div>
 
@@ -1216,45 +1214,45 @@
       </div>
     </section>
 
-    <!-- Bénéfices & Retours d'Usage -->
+    <!-- Périmètre d'Application -->
     <section id="benefices" class="section section-alt">
       <div class="container">
         <div class="section-head">
-          <span class="section-kicker">Bénéfices &amp; Retours Terrain</span>
-          <h2 class="section-title">Conçu pour les exploitants exigeants et les décideurs</h2>
+          <span class="section-kicker">Périmètre d'Application</span>
+          <h2 class="section-title">Applications en audit de performance, suivi d'exploitation et planification</h2>
           <p class="section-desc">
-            Un cadre analytique unifié pour passer d'une intuition « la production semble faible » à un diagnostic chiffré et actionnable.
+            Un cadre analytique documenté pour quantifier les écarts entre mesures terrain et modélisation physique avant d'engager des actions correctives ou des investissements.
           </p>
         </div>
 
         <div class="cards-3">
-          <article class="quote-card">
-            <p class="quote-text">
-              « Disposer d'une enveloppe de variabilité climatique plutôt que d'une simple moyenne annuelle évite de confondre une saison atypique avec une défaillance matérielle. »
+          <article class="scope-card">
+            <p class="scope-text">
+              Confronter les bilans mensuels et annuels à une enveloppe interannuelle [Min, Max] permet de replacer chaque année d'exploitation dans sa variabilité climatique avant d'imputer un écart à un défaut matériel.
             </p>
-            <div class="quote-author">
+            <div class="scope-meta">
               <strong>Audit de performance d'installation existante</strong>
-              <span>Comparaison historique Éloyes (2011–2026) &amp; Mare Ronde (2024–2026)</span>
+              <span>Séries suivies : Éloyes (2011–2026) &amp; Mare Ronde (2024–2026)</span>
             </div>
           </article>
 
-          <article class="quote-card">
-            <p class="quote-text">
-              « La simulation du taux de dégradation sur 30 ans permet d'objectiver le rendement cumulé attendu et d'anticiper les arbitrages de maintenance ou de repowering. »
+          <article class="scope-card">
+            <p class="scope-text">
+              La simulation sur 30 ans à taux annuel paramétré (0,00 %/an à 5,00 %/an) fournit une base chiffrée pour comparer des hypothèses d'évolution de productible et préparer les arbitrages de maintenance ou de renouvellement.
             </p>
-            <div class="quote-author">
-              <strong>Pilotage &amp; planification énergétique</strong>
-              <span>Scénarios paramétrables de 0,00 %/an à 5,00 %/an</span>
+            <div class="scope-meta">
+              <strong>Planification technique &amp; scénarios long terme</strong>
+              <span>Paramètres ajustables : âge du système, taux annuel, année cible</span>
             </div>
           </article>
 
-          <article class="quote-card">
-            <p class="quote-text">
-              « Chaque étape — de l'irradiance sur plan incliné à la température de cellule — repose sur des bibliothèques ouvertes et vérifiables, sans boîte noire opaque. »
+          <article class="scope-card">
+            <p class="scope-text">
+              Chaque étape de calcul — de l'irradiance sur plan incliné à la température de cellule et à la puissance AC — repose sur des modèles physiques ouverts et explicites, sans opacité de calcul.
             </p>
-            <div class="quote-author">
-              <strong>Transparence scientifique &amp; ingénierie</strong>
-              <span>Chaîne pvlib • PVGIS-SARAH3 • ASHRAE • SAPM</span>
+            <div class="scope-meta">
+              <strong>Traçabilité physique &amp; reproductibilité</strong>
+              <span>Chaîne pvlib • PVGIS-SARAH3 • AOI/IAM ASHRAE • SAPM</span>
             </div>
           </article>
         </div>
@@ -1273,21 +1271,21 @@
           <details class="faq-item">
             <summary>Comment est calculée l'enveloppe [Min, Max] affichée sur les graphiques ?</summary>
             <p>
-              Elle provient de la dispersion interannuelle de la série climatique de référence (PVGIS-SARAH3, 2005–2023) traitée par le modèle physique pvlib, puis modulée par le facteur de dégradation annuel (1 − r)<sup>âge</sup>. Elle représente la variabilité météorologique attendue et non un intervalle de confiance statistique paramétrique.
+              Elle provient de la dispersion interannuelle de la série climatique de référence (PVGIS-SARAH3, 2005–2023) traitée par le modèle physique pvlib, puis modulée par le facteur annuel (1 − r)<sup>âge</sup>. Elle représente la variabilité météorologique de la réanalyse et non un intervalle de confiance statistique paramétrique.
             </p>
           </details>
 
           <details class="faq-item">
             <summary>Que signifient les indicateurs MBE et RMSE sous les graphiques ?</summary>
             <p>
-              Le <strong>MBE</strong> (Mean Bias Error) mesure le biais moyen : une valeur négative indique que la production observée est inférieure à la moyenne modélisée pour l'âge considéré. Le <strong>RMSE</strong> (Root Mean Square Error) quantifie l'amplitude quadratique des écarts mensuels ou annuels.
+              Le <strong>MBE</strong> (Mean Bias Error) mesure l'écart moyen (réel moins modèle) : une valeur négative indique que la production observée est inférieure à la moyenne modélisée pour l'âge considéré. Le <strong>RMSE</strong> (Root Mean Square Error) quantifie l'amplitude quadratique des écarts mensuels ou annuels.
             </p>
           </details>
 
           <details class="faq-item">
             <summary>Pourquoi certaines années réelles sortent-elles du couloir [Min, Max] ?</summary>
             <p>
-              Un point hors bande signale un événement non capturé par l'hypothèse nominale : masquage ou végétation, encrassement, coupure onduleur/réseau, ou année météorologique particulièrement contrastée. Cela constitue le point de départ d'un audit ciblé.
+              Un point hors bande signale un écart entre la configuration nominale simulée et la situation réelle : masquage ou végétation, encrassement, arrêt onduleur/réseau, incertitude sur la géométrie/puissance installée, ou année météorologique particulière. Il sert à orienter une vérification ciblée.
             </p>
           </details>
 
@@ -1301,21 +1299,21 @@
       </div>
     </section>
 
-    <!-- Contact & Appel à l'Action Final -->
+    <!-- Contact & Expertise CTA Final -->
     <section id="contact" class="section section-alt">
       <div class="container">
         <div class="cta-banner">
           <div>
-            <span class="section-kicker" style="color: var(--solar-gold);">Accompagnement &amp; Expertise</span>
-            <h2>Besoin d'un diagnostic de performance ou d'une étude de site PV ?</h2>
+            <span class="section-kicker" style="color: var(--solar-gold);">Expertise Technique &amp; Géosciences</span>
+            <h2>Expertise technique et modélisation photovoltaïque</h2>
             <p>
-              De l'audit d'une installation existante à la modélisation multi-sites et à la formation scientifique, NovaKnowledge.int accompagne vos projets avec rigueur et clarté.
+              Audit de performance, analyse d'écarts de production, modélisation physique multi-sites (pvlib / Python) et conseil en géosciences appliquées par NovaKnowledge.int.
             </p>
           </div>
           <div class="contact-box">
             <div class="org">NovaKnowledge.int</div>
             <p>
-              Conseil scientifique, géosciences appliquées &amp; modélisation photovoltaïque (pvlib / Python).
+              Géosciences appliquées, audit &amp; modélisation photovoltaïque (pvlib / PVGIS-SARAH3).
             </p>
             <a href="#atelier-pv" class="btn-primary" style="width: 100%; justify-content: center;">
               Ouvrir le simulateur multi-sites
@@ -1329,10 +1327,10 @@
   <footer>
     <div class="footer-inner">
       <div>
-        <strong style="color: #e2e8f0;">PV Central</strong> — Développé par <strong>NovaKnowledge.int</strong> • Modélisation physique pvlib &amp; visualisation Plotly.
+        <strong style="color: #e2e8f0;">PV Central (PVCentral_Analysis)</strong> — Développé par <strong>NovaKnowledge.int</strong> • Chaîne physique pvlib &amp; visualisation Plotly.
       </div>
       <div>
-        Données climatiques : PVGIS-SARAH3 • Sites : Éloyes (Site 0) &amp; Mare Ronde (Site 2).
+        Réanalyse : PVGIS-SARAH3 (2005–2023) • Sites documentés : Éloyes (Site 0) &amp; Mare Ronde (Site 2).
       </div>
     </div>
   </footer>
@@ -1421,7 +1419,7 @@
         meta: {
           id: "eloyes",
           site: "Site 0 — Éloyes (Vosges, France)",
-          badge: "2011–2026",
+          badge: "Suivi 2011–2026",
           lat: 48.1,
           lon: 6.6,
           alt: 373.0,
@@ -1451,7 +1449,7 @@
         meta: {
           id: "mare_ronde",
           site: "Site 2 — Mare Ronde (Maurice)",
-          badge: "2024–2026",
+          badge: "Suivi 2024–2026",
           lat: -20.001947,
           lon: 57.601997,
           alt: 10.0,
@@ -1571,7 +1569,7 @@
         {
           label: "Cumul Moyen 30 Ans",
           val: `${fmtInt(cum30)} kWh`,
-          sub: `Dégradation simulée : ${(state.rate * 100).toFixed(2)} %/an`
+          sub: `Taux annuel simulé : ${(state.rate * 100).toFixed(2)} %/an`
         }
       ];
 
@@ -1753,13 +1751,13 @@
         {
           x: D.months, y: D.monthly_min, type: "scatter", mode: "lines",
           fill: "tonexty", fillcolor: "rgba(37, 117, 212, 0.14)",
-          line: { width: 0 }, name: "Neuf Min–Max"
+          line: { width: 0 }, name: "Référence Min–Max"
         },
         {
           x: D.months, y: D.monthly_mean, type: "scatter", mode: "lines+markers",
           error_y: { type: "data", array: D.monthly_std, visible: true, thickness: 1.2, width: 3 },
           line: { color: "#1d63b8", width: 2.2 }, marker: { size: 5.5 },
-          name: "Neuf (Moy ± SD)"
+          name: "Référence (Moy ± SD)"
         },
         {
           x: D.months, y: newMax, type: "scatter", mode: "lines",
@@ -1768,12 +1766,12 @@
         {
           x: D.months, y: newMin, type: "scatter", mode: "lines",
           fill: "tonexty", fillcolor: "rgba(217, 119, 6, 0.16)",
-          line: { width: 0 }, name: `Vieilli Min–Max (${state.age}a)`
+          line: { width: 0 }, name: `Enveloppe ajustée Min–Max (${state.age}a)`
         },
         {
           x: D.months, y: newMean, type: "scatter", mode: "lines",
           line: { color: "#d97706", width: 2.3, dash: "dash" },
-          name: `Vieilli Moy (${state.age}a)`
+          name: `Modèle ajusté Moy (${state.age}a)`
         },
         {
           x: bgPts.map((p) => D.months[p.x]), y: bgPts.map((p) => p.y),
