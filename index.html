@@ -2222,4 +2222,194 @@
       const compYears = [], compVals = [], partYears = [], partVals = [];
       for (let i = 0; i < D.real_years.length; i++) {
         if (D.real_annual[i] !== null) {
-          if (D.real
+          if (D.real_months_count[i] === 12) {
+            compYears.push(D.real_years[i]);
+            compVals.push(D.real_annual[i]);
+          } else {
+            partYears.push(D.real_years[i]);
+            partVals.push(D.real_annual[i]);
+          }
+        }
+      }
+
+      const yearTraces = [
+        {
+          x: D.op_years, y: annMaxOp, type: "scatter", mode: "lines",
+          line: { width: 0 }, showlegend: false, hoverinfo: "skip"
+        },
+        {
+          x: D.op_years, y: annMinOp, type: "scatter", mode: "lines",
+          fill: "tonexty", fillcolor: "rgba(217, 119, 6, 0.15)",
+          line: { width: 0 }, name: `Couloir (${D.meta.start_op_year}–${D.op_years[D.op_years.length - 1]})`
+        },
+        {
+          x: D.op_years, y: annMeanOp, type: "scatter", mode: "lines",
+          line: { color: "#d97706", width: 2.3, dash: "dash" },
+          name: `Moyenne (${(state.rate * 100).toFixed(2)} %/an)`
+        },
+        {
+          x: compYears, y: compVals, type: "scatter", mode: "lines+markers",
+          line: { color: "#0d9488", width: 2.2 }, marker: { size: 6.5 },
+          name: "Réel annuel (12m)"
+        },
+        {
+          x: partYears, y: partVals, type: "scatter", mode: "markers",
+          marker: { color: "#2575d4", size: 9, symbol: "diamond" },
+          name: "Réel partiel"
+        }
+      ];
+
+      Plotly.react("chartMonth", monthTraces, {
+        title: state.allYears
+          ? `Profil Mensuel — Toutes années (Âge=${state.age}a)`
+          : `Profil Mensuel — Année ${state.year} (Âge=${state.age}a)`,
+        font: { family: "Inter, sans-serif", color: "#0f172a" },
+        xaxis: { title: "Mois" },
+        yaxis: { title: "Énergie AC (kWh)" },
+        legend: { orientation: "h", y: -0.24 },
+        margin: { l: 56, r: 20, t: 48, b: 100 },
+        paper_bgcolor: "#ffffff",
+        plot_bgcolor: "#ffffff"
+      }, { responsive: true });
+
+      Plotly.react("chartYear", yearTraces, {
+        title: `Couloir Annuel (${D.meta.start_op_year}–${D.op_years[D.op_years.length - 1]}, 30 ans)`,
+        font: { family: "Inter, sans-serif", color: "#0f172a" },
+        xaxis: { title: "Année", range: [D.meta.start_op_year - 0.5, D.op_years[D.op_years.length - 1] + 0.8] },
+        yaxis: { title: "Énergie Annuelle AC (kWh)" },
+        legend: { orientation: "h", y: -0.24 },
+        margin: { l: 62, r: 20, t: 48, b: 100 },
+        paper_bgcolor: "#ffffff",
+        plot_bgcolor: "#ffffff"
+      }, { responsive: true });
+
+      renderHeroSpec();
+      computeMetrics(newMin, newMax, factorAge);
+      renderTable();
+      renderKPIs();
+    }
+
+    const controlsPanel = document.getElementById("controlsPanel");
+    const rngAge = document.getElementById("rngAge");
+    const rngRate = document.getElementById("rngRate");
+    const rngYear = document.getElementById("rngYear");
+    const btnAll = document.getElementById("btnAll");
+    const btnReset = document.getElementById("btnReset");
+    const siteSelect = document.getElementById("siteSelect");
+    const siteModeBadge = document.getElementById("siteModeBadge");
+
+    function syncYearSliderBounds() {
+      const D = getD();
+      rngYear.min = D.meta.start_op_year;
+      rngYear.max = D.meta.current_year;
+      if (state.year < D.meta.start_op_year || state.year > D.meta.current_year) {
+        state.year = D.meta.start_op_year;
+      }
+      rngYear.value = state.year;
+    }
+
+    function syncLabels() {
+      const D = getD();
+      const isRestricted = Boolean(D.meta.restricted_access);
+
+      controlsPanel.classList.toggle("is-disabled", isRestricted);
+      rngAge.disabled = isRestricted;
+      rngRate.disabled = isRestricted;
+      rngYear.disabled = isRestricted;
+      btnAll.disabled = isRestricted;
+      btnReset.disabled = isRestricted;
+
+      if (isRestricted) {
+        document.getElementById("lblAge").textContent = "Verrouillé";
+        document.getElementById("lblRate").textContent = "Verrouillé";
+        document.getElementById("lblYear").textContent = "Verrouillé";
+      } else {
+        document.getElementById("lblAge").textContent = `${state.age} ans`;
+        document.getElementById("lblRate").textContent = `${(state.rate * 100).toFixed(2)} %/an`;
+        document.getElementById("lblYear").textContent = state.allYears ? "Toutes" : `${state.year}`;
+      }
+
+      btnAll.classList.toggle("active", state.allYears);
+      if (siteSelect.value !== state.siteId) {
+        siteSelect.value = state.siteId;
+      }
+      if (isRestricted) {
+        siteModeBadge.textContent = "Accès restreint • Confidentialité";
+        siteModeBadge.className = "site-mode-badge is-restricted";
+      } else {
+        siteModeBadge.textContent = "Données de référence";
+        siteModeBadge.className = "site-mode-badge is-real";
+      }
+    }
+
+    function switchSite(newSiteId) {
+      if (!SITES[newSiteId]) return;
+      const D = SITES[newSiteId];
+      state.siteId = newSiteId;
+      state.age = D.meta.init_age;
+      state.rate = D.meta.init_rate;
+      state.year = D.meta.start_op_year;
+      state.allYears = true;
+
+      rngAge.value = state.age;
+      rngRate.value = (state.rate * 100).toFixed(2);
+      syncYearSliderBounds();
+      syncLabels();
+      updateCharts();
+    }
+
+    siteSelect.addEventListener("change", (e) => switchSite(e.target.value));
+
+    rngAge.addEventListener("input", () => {
+      if (getD().meta.restricted_access) return;
+      state.age = parseInt(rngAge.value, 10);
+      syncLabels();
+      updateCharts();
+    });
+
+    rngRate.addEventListener("input", () => {
+      if (getD().meta.restricted_access) return;
+      state.rate = parseFloat(rngRate.value) / 100.0;
+      syncLabels();
+      updateCharts();
+    });
+
+    rngYear.addEventListener("input", () => {
+      const D = getD();
+      if (D.meta.restricted_access) return;
+      state.year = parseInt(rngYear.value, 10);
+      state.allYears = false;
+      const syncedAge = Math.max(0, Math.min(30, state.year - D.meta.start_op_year));
+      state.age = syncedAge;
+      rngAge.value = syncedAge;
+      syncLabels();
+      updateCharts();
+    });
+
+    btnAll.addEventListener("click", () => {
+      if (getD().meta.restricted_access) return;
+      state.allYears = true;
+      syncLabels();
+      updateCharts();
+    });
+
+    btnReset.addEventListener("click", () => {
+      const D = getD();
+      if (D.meta.restricted_access) return;
+      state.age = D.meta.init_age;
+      state.rate = D.meta.init_rate;
+      state.year = D.meta.start_op_year;
+      state.allYears = true;
+      rngAge.value = state.age;
+      rngRate.value = (state.rate * 100).toFixed(2);
+      rngYear.value = state.year;
+      syncLabels();
+      updateCharts();
+    });
+
+    syncYearSliderBounds();
+    syncLabels();
+    updateCharts();
+  </script>
+</body>
+</html>
