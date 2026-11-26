@@ -574,7 +574,7 @@
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       padding-bottom: 16px;
       margin-bottom: 18px;
       border-bottom: 1px solid var(--border-light);
@@ -586,35 +586,63 @@
       color: var(--navy-900);
     }
 
-    .site-tabs {
+    .site-selector-wrap {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 360px;
+      max-width: 640px;
     }
 
-    .site-tab {
+    .site-select {
+      flex: 1 1 280px;
       font-family: "Inter", sans-serif;
-      font-size: 0.84rem;
-      font-weight: 700;
-      padding: 9px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--border-strong);
-      background: #ffffff;
-      color: var(--text-primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--navy-900);
+      background-color: #ffffff;
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 10px 38px 10px 14px;
       cursor: pointer;
-      transition: all var(--transition);
-    }
-
-    .site-tab:hover {
-      border-color: var(--blue-600);
-      color: var(--blue-600);
-    }
-
-    .site-tab.active {
-      background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
-      border-color: var(--navy-900);
-      color: #ffffff;
       box-shadow: var(--shadow-sm);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230b1f36' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+    }
+
+    .site-select:hover {
+      border-color: var(--blue-600);
+    }
+
+    .site-select:focus-visible {
+      outline: 3px solid var(--solar-amber);
+      outline-offset: 2px;
+      border-color: var(--navy-900);
+    }
+
+    .site-mode-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .site-mode-badge.is-real {
+      background: var(--status-ok-bg);
+      color: var(--status-ok-fg);
+    }
+
+    .site-mode-badge.is-sim {
+      background: var(--solar-soft);
+      color: var(--solar-amber-dark);
     }
 
     .controls-panel {
@@ -1026,13 +1054,13 @@
           <div class="hero-proof">
             <span>✓ Réanalyse horaire PVGIS-SARAH3 (2005–2023)</span>
             <span>✓ Métriques MBE, RMSE &amp; enveloppe [Min, Max]</span>
-            <span>✓ Sites documentés : Éloyes &amp; Mare Ronde</span>
+            <span>✓ 7 sites configurés (Sites 0 à 6, accès restreint sur Sites 2 à 6)</span>
           </div>
         </div>
 
         <aside class="hero-spec-card" id="heroSpecCard" aria-label="Spécifications du site actif">
           <div class="hero-spec-header">
-            <span class="hero-spec-title" id="heroSpecTitle">Site 0 — Éloyes (Vosges, France)</span>
+            <span class="hero-spec-title" id="heroSpecTitle">Site 0 — Éloyes, France</span>
             <span class="pill-live" id="heroSpecBadge">Suivi 2011–2026</span>
           </div>
           <div class="spec-rows">
@@ -1114,16 +1142,24 @@
           <span class="section-kicker">Simulateur Interactif Multi-Sites</span>
           <h2 class="section-title">Profil mensuel &amp; couloir annuel de production</h2>
           <p class="section-desc">
-            Sélectionnez un site (Éloyes ou Mare Ronde), ajustez l'âge du système, le taux annuel paramétré ou isolez une année d'exploitation pour comparer le modèle aux mesures terrain.
+            Sélectionnez l'un des 7 sites dans le menu déroulant, ajustez l'âge du système, le taux annuel paramétré ou isolez une année d'exploitation pour comparer le modèle aux séries affichées.
           </p>
         </div>
 
         <div class="lab-card">
           <div class="site-bar" role="region" aria-label="Sélection du site photovoltaïque">
-            <span class="site-bar-title">Centrale photovoltaïque sélectionnée :</span>
-            <div class="site-tabs" id="siteTabs">
-              <button type="button" class="site-tab active" data-site="eloyes">Site 0 — Éloyes (2,88 kWc)</button>
-              <button type="button" class="site-tab" data-site="mare_ronde">Site 2 — Mare Ronde (5,10 kWc)</button>
+            <label for="siteSelect" class="site-bar-title">Centrale photovoltaïque sélectionnée :</label>
+            <div class="site-selector-wrap">
+              <select id="siteSelect" class="site-select" aria-label="Choisir une centrale photovoltaïque parmi les 7 sites">
+                <option value="site_0_eloyes">Site 0 — Éloyes, France (2,88 kWc • 2011–2026)</option>
+                <option value="site_1_pereybere">Site 1 — Pereybère, Maurice (5,10 kWc • 2024–2026)</option>
+                <option value="site_2_pau">Site 2 — Pau, France (accès restreint • 6,00 kWc)</option>
+                <option value="site_3_bel_ombre">Site 3 — Bel Ombre, Maurice (accès restreint • 10,00 kWc)</option>
+                <option value="site_4_port_louis">Site 4 — Port Louis, Maurice (accès restreint • 15,00 kWc)</option>
+                <option value="site_5_lausanne">Site 5 — Lausanne, Suisse (accès restreint • 8,00 kWc)</option>
+                <option value="site_6_briancon">Site 6 — Briançon, France (accès restreint • 7,20 kWc)</option>
+              </select>
+              <span class="site-mode-badge is-real" id="siteModeBadge">Données de référence</span>
             </div>
           </div>
 
@@ -1181,13 +1217,13 @@
           <span class="section-kicker">Scénario sur 30 Ans</span>
           <h2 class="section-title">Table annuelle de simulation (30 ans dès mise en service)</h2>
           <p class="section-desc">
-            Projection de l'enveloppe [Min, Max], de la moyenne annuelle et du cumul énergétique à partir de l'année de mise en service du site actif, confrontée aux bilans réels enregistrés.
+            Projection de l'enveloppe [Min, Max], de la moyenne annuelle et du cumul énergétique à partir de l'année de mise en service du site actif, confrontée aux séries enregistrées.
           </p>
         </div>
 
         <div class="lab-card">
           <div class="table-legend">
-            <span>Statut des bilans réels :</span>
+            <span>Statut des séries :</span>
             <span class="legend-pill legend-ok">Dans l'enveloppe [Min, Max]</span>
             <span class="legend-pill legend-low">Sous le minimum</span>
             <span class="legend-pill legend-high">Au-dessus du maximum</span>
@@ -1232,7 +1268,7 @@
             </p>
             <div class="scope-meta">
               <strong>Audit de performance d'installation existante</strong>
-              <span>Séries suivies : Éloyes (2011–2026) &amp; Mare Ronde (2024–2026)</span>
+              <span>Séries suivies : Éloyes (2011–2026) &amp; Pereybère (2024–2026)</span>
             </div>
           </article>
 
@@ -1283,16 +1319,16 @@
           </details>
 
           <details class="faq-item">
-            <summary>Pourquoi certaines années réelles sortent-elles du couloir [Min, Max] ?</summary>
+            <summary>Pourquoi certains points sortent-ils du couloir [Min, Max] ?</summary>
             <p>
-              Un point hors bande signale un écart entre la configuration nominale simulée et la situation réelle : masquage ou végétation, encrassement, arrêt onduleur/réseau, incertitude sur la géométrie/puissance installée, ou année météorologique particulière. Il sert à orienter une vérification ciblée.
+              Un point hors bande signale un écart entre la configuration nominale simulée et la série observée : masquage ou végétation, encrassement, arrêt onduleur/réseau, incertitude sur la géométrie/puissance installée, ou année météorologique particulière. Il sert à orienter une vérification ciblée.
             </p>
           </details>
 
           <details class="faq-item">
             <summary>Comment ajouter d'autres centrales au mode multi-sites ?</summary>
             <p>
-              Chaque centrale dispose de sa propre entrée dans l'objet <code>SITES</code> (métadonnées géométriques, année de mise en service, courbes mensuelles/annuelles et séries réelles). L'ajout d'un site consiste à déclarer un nouvel identifiant dans <code>SITES</code> et son bouton de sélection.
+              Chaque centrale dispose de sa propre entrée dans l'objet <code>SITES</code> (métadonnées géométriques, année de mise en service, courbes mensuelles/annuelles et séries associées). L'ajout d'un site consiste à déclarer un nouvel identifiant dans <code>SITES</code> et une option dans <code>#siteSelect</code>.
             </p>
           </details>
         </div>
@@ -1330,7 +1366,7 @@
         <strong style="color: #e2e8f0;">PV Central (PVCentral_Analysis)</strong> — Développé par <strong>NovaKnowledge.int</strong> • Chaîne physique pvlib &amp; visualisation Plotly.
       </div>
       <div>
-        Réanalyse : PVGIS-SARAH3 (2005–2023) • Sites documentés : Éloyes (Site 0) &amp; Mare Ronde (Site 2).
+        Réanalyse : PVGIS-SARAH3 (2005–2023) • 7 sites (Sites 0 à 6, sites 2 à 6 en accès restreint).
       </div>
     </div>
   </footer>
@@ -1413,13 +1449,81 @@
     ];
     const eloyesReal = buildRealSummaryFromMatrix(ELOYES_YEARS, ELOYES_MATRIX);
     const eloyesOp = makeOpSeries(2011, 30);
+    const pereybereOp = makeOpSeries(2024, 30);
+
+    const MONTHS_FR = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"];
+
+    // Profils saisonniers normalisés (somme = 12) pour les sites en accès restreint (données de démonstration)
+    const TEMP_SHAPE_NORTH = [0.38, 0.56, 1.00, 1.28, 1.45, 1.58, 1.62, 1.42, 1.13, 0.77, 0.44, 0.31];
+    const TROPIC_SHAPE_SOUTH = [1.11, 0.98, 1.04, 0.95, 0.87, 0.77, 0.82, 0.93, 1.05, 1.17, 1.16, 1.18];
+
+    function buildRestrictedDemoSite({
+      id, site, badge, lat, lon, alt, kwp, tilt, azimuth,
+      startOpYear, currentYear, initAge, initRate, annualMean, shape, spreadPct, sampleFactor
+    }) {
+      const op = makeOpSeries(startOpYear, 30);
+      const monthlyMean = shape.map((s) => Number(((annualMean / 12.0) * s).toFixed(3)));
+      const monthlyMin = monthlyMean.map((m) => Number((m * (1 - spreadPct)).toFixed(3)));
+      const monthlyMax = monthlyMean.map((m) => Number((m * (1 + spreadPct)).toFixed(3)));
+      const monthlyStd = monthlyMean.map((m) => Number((m * spreadPct * 0.55).toFixed(3)));
+      const annMin = Number(monthlyMin.reduce((a, b) => a + b, 0).toFixed(3));
+      const annMax = Number(monthlyMax.reduce((a, b) => a + b, 0).toFixed(3));
+
+      const years = [];
+      for (let y = startOpYear; y <= currentYear; y++) years.push(y);
+
+      const matrix = years.map((yr, idx) => {
+        const ageY = Math.max(0, yr - startOpYear);
+        const degF = Math.pow(1 - initRate, ageY);
+        const wave = 1 + 0.045 * Math.sin(idx * 1.45 + 0.4);
+        return monthlyMean.map((m, mIdx) => {
+          if (yr === currentYear && mIdx >= 10) return null;
+          const mWave = 1 + 0.03 * Math.cos(mIdx * 0.9 + idx * 0.7);
+          return Number((m * degF * sampleFactor * wave * mWave).toFixed(1));
+        });
+      });
+
+      const realSummary = buildRealSummaryFromMatrix(years, matrix);
+      return {
+        meta: {
+          id,
+          site,
+          badge,
+          restricted_access: true,
+          lat,
+          lon,
+          alt,
+          kwp,
+          tilt,
+          azimuth,
+          period_pvgis: "2005–2023",
+          start_op_year: startOpYear,
+          current_year: currentYear,
+          forecast_years: 30,
+          init_age: initAge,
+          init_rate: initRate
+        },
+        months: MONTHS_FR,
+        monthly_mean: monthlyMean,
+        monthly_std: monthlyStd,
+        monthly_min: monthlyMin,
+        monthly_max: monthlyMax,
+        ann_mean: Number(annualMean.toFixed(3)),
+        ann_min: annMin,
+        ann_max: annMax,
+        op_ages: op.op_ages,
+        op_years: op.op_years,
+        ...realSummary
+      };
+    }
 
     const SITES = {
-      eloyes: {
+      site_0_eloyes: {
         meta: {
-          id: "eloyes",
-          site: "Site 0 — Éloyes (Vosges, France)",
+          id: "site_0_eloyes",
+          site: "Site 0 — Éloyes, France",
           badge: "Suivi 2011–2026",
+          restricted_access: false,
           lat: 48.1,
           lon: 6.6,
           alt: 373.0,
@@ -1433,7 +1537,7 @@
           init_age: 10,
           init_rate: 0.005
         },
-        months: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
+        months: MONTHS_FR,
         monthly_mean: [91.807, 137.719, 245.148, 313.469, 354.509, 386.92, 396.144, 348.662, 277.556, 188.831, 106.567, 76.237],
         monthly_std: [18.66, 26.63, 42.784, 51.228, 52.554, 46.014, 46.2, 32.027, 22.369, 25.583, 22.209, 21.927],
         monthly_min: [70.602, 96.917, 167.952, 248.305, 239.916, 299.167, 307.893, 290.114, 236.338, 135.173, 69.483, 47.876],
@@ -1445,11 +1549,12 @@
         op_years: eloyesOp.op_years,
         ...eloyesReal
       },
-      mare_ronde: {
+      site_1_pereybere: {
         meta: {
-          id: "mare_ronde",
-          site: "Site 2 — Mare Ronde (Maurice)",
+          id: "site_1_pereybere",
+          site: "Site 1 — Pereybère, Maurice",
           badge: "Suivi 2024–2026",
+          restricted_access: false,
           lat: -20.001947,
           lon: 57.601997,
           alt: 10.0,
@@ -1463,7 +1568,7 @@
           init_age: 1,
           init_rate: 0.005
         },
-        months: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
+        months: MONTHS_FR,
         monthly_mean: [766.311, 678.691, 718.08, 654.435, 602.25, 531.155, 566.812, 640.294, 726.84, 808.246, 803.462, 816.102],
         monthly_std: [63.99, 46.651, 52.723, 52.83, 29.485, 27.1, 23.1, 21.698, 28.219, 23.709, 42.292, 49.911],
         monthly_min: [665.897, 590.142, 597.893, 530.576, 539.004, 478.405, 531.328, 590.586, 663.133, 764.342, 709.614, 721.739],
@@ -1471,8 +1576,8 @@
         ann_mean: 8312.678,
         ann_min: 7944.593,
         ann_max: 8507.178,
-        op_ages: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-        op_years: [2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054],
+        op_ages: pereybereOp.op_ages,
+        op_years: pereybereOp.op_years,
         real_pts: [
           { x: 8, y: 811.6, year: 2024, month: 9 },
           { x: 9, y: 891.4, year: 2024, month: 10 },
@@ -1509,14 +1614,109 @@
           [true, true, true, true, true, true, true, true, true, true, true, true],
           [true, true, true, true, true, true, true, true, true, true, false, false]
         ]
-      }
+      },
+      site_2_pau: buildRestrictedDemoSite({
+        id: "site_2_pau",
+        site: "Site 2 — Pau, France (accès restreint)",
+        badge: "Accès restreint • 2020–2026",
+        lat: 43.2951,
+        lon: -0.3708,
+        alt: 200.0,
+        kwp: 6.0,
+        tilt: 25.0,
+        azimuth: 180.0,
+        startOpYear: 2020,
+        currentYear: 2026,
+        initAge: 5,
+        initRate: 0.005,
+        annualMean: 7680.0,
+        shape: TEMP_SHAPE_NORTH,
+        spreadPct: 0.11,
+        sampleFactor: 0.98
+      }),
+      site_3_bel_ombre: buildRestrictedDemoSite({
+        id: "site_3_bel_ombre",
+        site: "Site 3 — Bel Ombre, Maurice (accès restreint)",
+        badge: "Accès restreint • 2022–2026",
+        lat: -20.5015,
+        lon: 57.4165,
+        alt: 25.0,
+        kwp: 10.0,
+        tilt: 12.0,
+        azimuth: 0.0,
+        startOpYear: 2022,
+        currentYear: 2026,
+        initAge: 3,
+        initRate: 0.005,
+        annualMean: 15800.0,
+        shape: TROPIC_SHAPE_SOUTH,
+        spreadPct: 0.07,
+        sampleFactor: 0.99
+      }),
+      site_4_port_louis: buildRestrictedDemoSite({
+        id: "site_4_port_louis",
+        site: "Site 4 — Port Louis, Maurice (accès restreint)",
+        badge: "Accès restreint • 2021–2026",
+        lat: -20.1609,
+        lon: 57.5012,
+        alt: 15.0,
+        kwp: 15.0,
+        tilt: 10.0,
+        azimuth: 0.0,
+        startOpYear: 2021,
+        currentYear: 2026,
+        initAge: 4,
+        initRate: 0.005,
+        annualMean: 23400.0,
+        shape: TROPIC_SHAPE_SOUTH,
+        spreadPct: 0.075,
+        sampleFactor: 0.97
+      }),
+      site_5_lausanne: buildRestrictedDemoSite({
+        id: "site_5_lausanne",
+        site: "Site 5 — Lausanne, Suisse (accès restreint)",
+        badge: "Accès restreint • 2019–2026",
+        lat: 46.5197,
+        lon: 6.6323,
+        alt: 495.0,
+        kwp: 8.0,
+        tilt: 22.0,
+        azimuth: 180.0,
+        startOpYear: 2019,
+        currentYear: 2026,
+        initAge: 6,
+        initRate: 0.005,
+        annualMean: 9440.0,
+        shape: TEMP_SHAPE_NORTH,
+        spreadPct: 0.12,
+        sampleFactor: 0.985
+      }),
+      site_6_briancon: buildRestrictedDemoSite({
+        id: "site_6_briancon",
+        site: "Site 6 — Briançon, France (accès restreint)",
+        badge: "Accès restreint • 2018–2026",
+        lat: 44.8984,
+        lon: 6.6431,
+        alt: 1326.0,
+        kwp: 7.2,
+        tilt: 30.0,
+        azimuth: 180.0,
+        startOpYear: 2018,
+        currentYear: 2026,
+        initAge: 7,
+        initRate: 0.005,
+        annualMean: 10080.0,
+        shape: TEMP_SHAPE_NORTH,
+        spreadPct: 0.10,
+        sampleFactor: 1.01
+      })
     };
 
     const state = {
-      siteId: "eloyes",
-      age: SITES.eloyes.meta.init_age,
-      rate: SITES.eloyes.meta.init_rate,
-      year: SITES.eloyes.meta.start_op_year,
+      siteId: "site_0_eloyes",
+      age: SITES.site_0_eloyes.meta.init_age,
+      rate: SITES.site_0_eloyes.meta.init_rate,
+      year: SITES.site_0_eloyes.meta.start_op_year,
       allYears: true
     };
 
@@ -1870,7 +2070,8 @@
     const rngYear = document.getElementById("rngYear");
     const btnAll = document.getElementById("btnAll");
     const btnReset = document.getElementById("btnReset");
-    const siteTabButtons = Array.from(document.querySelectorAll(".site-tab"));
+    const siteSelect = document.getElementById("siteSelect");
+    const siteModeBadge = document.getElementById("siteModeBadge");
 
     function syncYearSliderBounds() {
       const D = getD();
@@ -1883,13 +2084,21 @@
     }
 
     function syncLabels() {
+      const D = getD();
       document.getElementById("lblAge").textContent = `${state.age} ans`;
       document.getElementById("lblRate").textContent = `${(state.rate * 100).toFixed(2)} %/an`;
       document.getElementById("lblYear").textContent = state.allYears ? "Toutes" : `${state.year}`;
       btnAll.classList.toggle("active", state.allYears);
-      siteTabButtons.forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.site === state.siteId);
-      });
+      if (siteSelect.value !== state.siteId) {
+        siteSelect.value = state.siteId;
+      }
+      if (D.meta.restricted_access) {
+        siteModeBadge.textContent = "Accès restreint";
+        siteModeBadge.className = "site-mode-badge is-sim";
+      } else {
+        siteModeBadge.textContent = "Données de référence";
+        siteModeBadge.className = "site-mode-badge is-real";
+      }
     }
 
     function switchSite(newSiteId) {
@@ -1908,9 +2117,7 @@
       updateCharts();
     }
 
-    siteTabButtons.forEach((btn) => {
-      btn.addEventListener("click", () => switchSite(btn.dataset.site));
-    });
+    siteSelect.addEventListener("change", (e) => switchSite(e.target.value));
 
     rngAge.addEventListener("input", () => {
       state.age = parseInt(rngAge.value, 10);
