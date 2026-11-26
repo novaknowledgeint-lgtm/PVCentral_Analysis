@@ -373,6 +373,12 @@
       white-space: nowrap;
     }
 
+    .pill-live.is-restricted {
+      background: rgba(148, 163, 184, 0.2);
+      color: #cbd5e1;
+      border-color: rgba(148, 163, 184, 0.4);
+    }
+
     .spec-rows {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -473,6 +479,15 @@
       border-color: var(--solar-amber);
     }
 
+    .kpi-card.is-restricted {
+      background: #f8fafc;
+      border-color: var(--border-strong);
+    }
+
+    .kpi-card.is-restricted:hover {
+      border-color: var(--text-muted);
+    }
+
     .kpi-top {
       display: flex;
       justify-content: space-between;
@@ -495,12 +510,21 @@
       background: var(--solar-amber);
     }
 
+    .kpi-card.is-restricted .kpi-dot {
+      background: #94a3b8;
+    }
+
     .kpi-val {
       font-family: "Plus Jakarta Sans", sans-serif;
       font-size: 1.55rem;
       font-weight: 800;
       color: var(--navy-900);
       line-height: 1.2;
+    }
+
+    .kpi-card.is-restricted .kpi-val {
+      color: var(--text-muted);
+      font-size: 1.25rem;
     }
 
     .kpi-sub {
@@ -628,9 +652,10 @@
     .site-mode-badge {
       display: inline-flex;
       align-items: center;
+      gap: 6px;
       font-size: 0.76rem;
       font-weight: 700;
-      padding: 5px 10px;
+      padding: 5px 11px;
       border-radius: 999px;
       white-space: nowrap;
     }
@@ -640,9 +665,10 @@
       color: var(--status-ok-fg);
     }
 
-    .site-mode-badge.is-sim {
-      background: var(--solar-soft);
-      color: var(--solar-amber-dark);
+    .site-mode-badge.is-restricted {
+      background: #e2e8f0;
+      color: #334155;
+      border: 1px solid #cbd5e1;
     }
 
     .controls-panel {
@@ -655,6 +681,13 @@
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
       gap: 16px;
       align-items: end;
+      transition: opacity var(--transition);
+    }
+
+    .controls-panel.is-disabled {
+      opacity: 0.55;
+      pointer-events: none;
+      user-select: none;
     }
 
     .control-group label {
@@ -727,11 +760,96 @@
     }
 
     .plot-frame {
+      position: relative;
       border: 1px solid var(--border-light);
       border-radius: var(--radius-md);
       padding: 8px;
       background: #ffffff;
       min-height: 440px;
+      overflow: hidden;
+    }
+
+    .plot-canvas {
+      width: 100%;
+      height: 100%;
+      min-height: 422px;
+    }
+
+    /* État grisé & confidentiel pour les sites en accès restreint (Sites 2 à 6) */
+    .plot-frame.is-restricted {
+      background:
+        repeating-linear-gradient(
+          -45deg,
+          #f1f5f9,
+          #f1f5f9 12px,
+          #e8eef5 12px,
+          #e8eef5 24px
+        );
+      border: 1.5px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+    }
+
+    .plot-frame.is-restricted .plot-canvas {
+      display: none;
+    }
+
+    .restricted-placeholder {
+      display: none;
+      max-width: 400px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-lg);
+      padding: 26px 24px;
+      box-shadow: 0 10px 25px -8px rgba(15, 23, 42, 0.12);
+    }
+
+    .plot-frame.is-restricted .restricted-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .restricted-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #e2e8f0;
+      color: #334155;
+      display: grid;
+      place-items: center;
+      margin-bottom: 2px;
+    }
+
+    .restricted-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #475569;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .restricted-title {
+      margin: 2px 0 0;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .restricted-desc {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.55;
     }
 
     .metrics-strip {
@@ -754,6 +872,11 @@
       border-radius: var(--radius-sm);
       padding: 14px 16px;
       font-size: 0.88rem;
+    }
+
+    .metric-box.is-restricted {
+      border-left-color: #94a3b8;
+      color: var(--text-secondary);
     }
 
     .metric-box h4 {
@@ -841,6 +964,28 @@
     td.st-in { background: var(--status-ok-bg) !important; color: var(--status-ok-fg); font-weight: 700; }
     td.st-below { background: var(--status-low-bg) !important; color: var(--status-low-fg); font-weight: 700; }
     td.st-above { background: var(--status-high-bg) !important; color: var(--status-high-fg); font-weight: 700; }
+
+    .restricted-table-notice {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-radius: var(--radius-md);
+      padding: 36px 24px;
+      text-align: center;
+      color: #475569;
+    }
+
+    .restricted-table-notice h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      color: #1e293b;
+    }
+
+    .restricted-table-notice p {
+      margin: 0 auto;
+      max-width: 560px;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
 
     /* Cas d'usage méthodologiques */
     .scope-card {
@@ -1054,7 +1199,7 @@
           <div class="hero-proof">
             <span>✓ Réanalyse horaire PVGIS-SARAH3 (2005–2023)</span>
             <span>✓ Métriques MBE, RMSE &amp; enveloppe [Min, Max]</span>
-            <span>✓ 7 sites configurés (Sites 0 à 6, accès restreint sur Sites 2 à 6)</span>
+            <span>✓ 7 sites configurés (Sites 0–1 publics, Sites 2–6 sous confidentialité)</span>
           </div>
         </div>
 
@@ -1074,11 +1219,11 @@
             </div>
             <div class="spec-item">
               <span class="spec-label">Coordonnées</span>
-              <span class="spec-value mono" id="specCoords">48,1°N, 6,6°E • 373 m</span>
+              <span class="spec-value mono" id="specCoords">48,10°N, 6,60°E • 373 m</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">Chaîne physique</span>
-              <span class="spec-value mono">AOI/IAM + SAPM</span>
+              <span class="spec-value mono" id="specChain">AOI/IAM + SAPM</span>
             </div>
           </div>
         </aside>
@@ -1163,7 +1308,7 @@
             </div>
           </div>
 
-          <div class="controls-panel" role="region" aria-label="Paramètres de simulation">
+          <div class="controls-panel" id="controlsPanel" role="region" aria-label="Paramètres de simulation">
             <div class="control-group">
               <label for="rngAge">
                 <span>Âge du système</span>
@@ -1198,8 +1343,41 @@
           </div>
 
           <div class="charts-split">
-            <div id="chartMonth" class="plot-frame" aria-label="Graphique de production mensuelle"></div>
-            <div id="chartYear" class="plot-frame" aria-label="Graphique du couloir annuel sur 30 ans"></div>
+            <!-- Cadre Graphique Mensuel -->
+            <div id="frameMonth" class="plot-frame" aria-label="Graphique de production mensuelle">
+              <div id="chartMonth" class="plot-canvas"></div>
+              <div class="restricted-placeholder" role="status" aria-live="polite">
+                <div class="restricted-icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </div>
+                <span class="restricted-tag">Confidentialité Client • Accès Restreint</span>
+                <h3 class="restricted-title">Profil mensuel non disponible</h3>
+                <p class="restricted-desc">
+                  Conformément aux engagements de confidentialité de NovaKnowledge.int, les courbes mensuelles de production et les relevés d'exploitation de ce site client sont masqués.
+                </p>
+              </div>
+            </div>
+
+            <!-- Cadre Graphique Annuel -->
+            <div id="frameYear" class="plot-frame" aria-label="Graphique du couloir annuel sur 30 ans">
+              <div id="chartYear" class="plot-canvas"></div>
+              <div class="restricted-placeholder" role="status" aria-live="polite">
+                <div class="restricted-icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </div>
+                <span class="restricted-tag">Confidentialité Client • Accès Restreint</span>
+                <h3 class="restricted-title">Couloir annuel 30 ans masqué</h3>
+                <p class="restricted-desc">
+                  Les séries historiques annuelles et les projections de productible associées à cette centrale sont réservées aux exploitants habilités.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div class="metrics-strip">
@@ -1221,8 +1399,8 @@
           </p>
         </div>
 
-        <div class="lab-card">
-          <div class="table-legend">
+        <div class="lab-card" id="forecastCard">
+          <div class="table-legend" id="tableLegend">
             <span>Statut des séries :</span>
             <span class="legend-pill legend-ok">Dans l'enveloppe [Min, Max]</span>
             <span class="legend-pill legend-low">Sous le minimum</span>
@@ -1230,7 +1408,7 @@
             <span>• <em>(4m)</em> / <em>(10m)</em> = cumul partiel comparé au prorata mensuel.</span>
           </div>
 
-          <div class="table-scroll">
+          <div class="table-scroll" id="tableScrollWrap">
             <table class="pv-table">
               <thead>
                 <tr>
@@ -1245,6 +1423,13 @@
               </thead>
               <tbody id="forecastTbody"></tbody>
             </table>
+          </div>
+
+          <div class="restricted-table-notice" id="restrictedTableNotice" style="display: none;" role="status">
+            <h3>Données de projection confidentielles</h3>
+            <p>
+              Le détail annuel sur 30 ans et les bilans d'exploitation de ce site client sont protégés. Sélectionnez un site de référence public (Sites 0 ou 1) ou contactez NovaKnowledge.int pour obtenir une accréditation.
+            </p>
           </div>
         </div>
       </div>
@@ -1326,9 +1511,9 @@
           </details>
 
           <details class="faq-item">
-            <summary>Comment ajouter d'autres centrales au mode multi-sites ?</summary>
+            <summary>Pourquoi les graphiques des sites 2 à 6 sont-ils grisés en accès restreint ?</summary>
             <p>
-              Chaque centrale dispose de sa propre entrée dans l'objet <code>SITES</code> (métadonnées géométriques, année de mise en service, courbes mensuelles/annuelles et séries associées). L'ajout d'un site consiste à déclarer un nouvel identifiant dans <code>SITES</code> et une option dans <code>#siteSelect</code>.
+              Afin de préserver la confidentialité des données d'exploitation de nos clients partenaires, les courbes mensuelles, trajectoires annuelles et relevés de production des centrales 2 à 6 ne sont pas publiés publiquement. Seules les caractéristiques nominales publiques (puissance crête, orientation, localisation générale) restent visibles.
             </p>
           </details>
         </div>
@@ -1366,7 +1551,7 @@
         <strong style="color: #e2e8f0;">PV Central (PVCentral_Analysis)</strong> — Développé par <strong>NovaKnowledge.int</strong> • Chaîne physique pvlib &amp; visualisation Plotly.
       </div>
       <div>
-        Réanalyse : PVGIS-SARAH3 (2005–2023) • 7 sites (Sites 0 à 6, sites 2 à 6 en accès restreint).
+        Réanalyse : PVGIS-SARAH3 (2005–2023) • 7 sites (Sites 0–1 publics, Sites 2–6 sous confidentialité client).
       </div>
     </div>
   </footer>
@@ -1452,70 +1637,6 @@
     const pereybereOp = makeOpSeries(2024, 30);
 
     const MONTHS_FR = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"];
-
-    // Profils saisonniers normalisés (somme = 12) pour les sites en accès restreint (données de démonstration)
-    const TEMP_SHAPE_NORTH = [0.38, 0.56, 1.00, 1.28, 1.45, 1.58, 1.62, 1.42, 1.13, 0.77, 0.44, 0.31];
-    const TROPIC_SHAPE_SOUTH = [1.11, 0.98, 1.04, 0.95, 0.87, 0.77, 0.82, 0.93, 1.05, 1.17, 1.16, 1.18];
-
-    function buildRestrictedDemoSite({
-      id, site, badge, lat, lon, alt, kwp, tilt, azimuth,
-      startOpYear, currentYear, initAge, initRate, annualMean, shape, spreadPct, sampleFactor
-    }) {
-      const op = makeOpSeries(startOpYear, 30);
-      const monthlyMean = shape.map((s) => Number(((annualMean / 12.0) * s).toFixed(3)));
-      const monthlyMin = monthlyMean.map((m) => Number((m * (1 - spreadPct)).toFixed(3)));
-      const monthlyMax = monthlyMean.map((m) => Number((m * (1 + spreadPct)).toFixed(3)));
-      const monthlyStd = monthlyMean.map((m) => Number((m * spreadPct * 0.55).toFixed(3)));
-      const annMin = Number(monthlyMin.reduce((a, b) => a + b, 0).toFixed(3));
-      const annMax = Number(monthlyMax.reduce((a, b) => a + b, 0).toFixed(3));
-
-      const years = [];
-      for (let y = startOpYear; y <= currentYear; y++) years.push(y);
-
-      const matrix = years.map((yr, idx) => {
-        const ageY = Math.max(0, yr - startOpYear);
-        const degF = Math.pow(1 - initRate, ageY);
-        const wave = 1 + 0.045 * Math.sin(idx * 1.45 + 0.4);
-        return monthlyMean.map((m, mIdx) => {
-          if (yr === currentYear && mIdx >= 10) return null;
-          const mWave = 1 + 0.03 * Math.cos(mIdx * 0.9 + idx * 0.7);
-          return Number((m * degF * sampleFactor * wave * mWave).toFixed(1));
-        });
-      });
-
-      const realSummary = buildRealSummaryFromMatrix(years, matrix);
-      return {
-        meta: {
-          id,
-          site,
-          badge,
-          restricted_access: true,
-          lat,
-          lon,
-          alt,
-          kwp,
-          tilt,
-          azimuth,
-          period_pvgis: "2005–2023",
-          start_op_year: startOpYear,
-          current_year: currentYear,
-          forecast_years: 30,
-          init_age: initAge,
-          init_rate: initRate
-        },
-        months: MONTHS_FR,
-        monthly_mean: monthlyMean,
-        monthly_std: monthlyStd,
-        monthly_min: monthlyMin,
-        monthly_max: monthlyMax,
-        ann_mean: Number(annualMean.toFixed(3)),
-        ann_min: annMin,
-        ann_max: annMax,
-        op_ages: op.op_ages,
-        op_years: op.op_years,
-        ...realSummary
-      };
-    }
 
     const SITES = {
       site_0_eloyes: {
@@ -1615,101 +1736,91 @@
           [true, true, true, true, true, true, true, true, true, true, false, false]
         ]
       },
-      site_2_pau: buildRestrictedDemoSite({
-        id: "site_2_pau",
-        site: "Site 2 — Pau, France (accès restreint)",
-        badge: "Accès restreint • 2020–2026",
-        lat: 43.2951,
-        lon: -0.3708,
-        alt: 200.0,
-        kwp: 6.0,
-        tilt: 25.0,
-        azimuth: 180.0,
-        startOpYear: 2020,
-        currentYear: 2026,
-        initAge: 5,
-        initRate: 0.005,
-        annualMean: 7680.0,
-        shape: TEMP_SHAPE_NORTH,
-        spreadPct: 0.11,
-        sampleFactor: 0.98
-      }),
-      site_3_bel_ombre: buildRestrictedDemoSite({
-        id: "site_3_bel_ombre",
-        site: "Site 3 — Bel Ombre, Maurice (accès restreint)",
-        badge: "Accès restreint • 2022–2026",
-        lat: -20.5015,
-        lon: 57.4165,
-        alt: 25.0,
-        kwp: 10.0,
-        tilt: 12.0,
-        azimuth: 0.0,
-        startOpYear: 2022,
-        currentYear: 2026,
-        initAge: 3,
-        initRate: 0.005,
-        annualMean: 15800.0,
-        shape: TROPIC_SHAPE_SOUTH,
-        spreadPct: 0.07,
-        sampleFactor: 0.99
-      }),
-      site_4_port_louis: buildRestrictedDemoSite({
-        id: "site_4_port_louis",
-        site: "Site 4 — Port Louis, Maurice (accès restreint)",
-        badge: "Accès restreint • 2021–2026",
-        lat: -20.1609,
-        lon: 57.5012,
-        alt: 15.0,
-        kwp: 15.0,
-        tilt: 10.0,
-        azimuth: 0.0,
-        startOpYear: 2021,
-        currentYear: 2026,
-        initAge: 4,
-        initRate: 0.005,
-        annualMean: 23400.0,
-        shape: TROPIC_SHAPE_SOUTH,
-        spreadPct: 0.075,
-        sampleFactor: 0.97
-      }),
-      site_5_lausanne: buildRestrictedDemoSite({
-        id: "site_5_lausanne",
-        site: "Site 5 — Lausanne, Suisse (accès restreint)",
-        badge: "Accès restreint • 2019–2026",
-        lat: 46.5197,
-        lon: 6.6323,
-        alt: 495.0,
-        kwp: 8.0,
-        tilt: 22.0,
-        azimuth: 180.0,
-        startOpYear: 2019,
-        currentYear: 2026,
-        initAge: 6,
-        initRate: 0.005,
-        annualMean: 9440.0,
-        shape: TEMP_SHAPE_NORTH,
-        spreadPct: 0.12,
-        sampleFactor: 0.985
-      }),
-      site_6_briancon: buildRestrictedDemoSite({
-        id: "site_6_briancon",
-        site: "Site 6 — Briançon, France (accès restreint)",
-        badge: "Accès restreint • 2018–2026",
-        lat: 44.8984,
-        lon: 6.6431,
-        alt: 1326.0,
-        kwp: 7.2,
-        tilt: 30.0,
-        azimuth: 180.0,
-        startOpYear: 2018,
-        currentYear: 2026,
-        initAge: 7,
-        initRate: 0.005,
-        annualMean: 10080.0,
-        shape: TEMP_SHAPE_NORTH,
-        spreadPct: 0.10,
-        sampleFactor: 1.01
-      })
+      site_2_pau: {
+        meta: {
+          id: "site_2_pau",
+          site: "Site 2 — Pau, France",
+          badge: "Accès restreint",
+          restricted_access: true,
+          region: "Nouvelle-Aquitaine, France",
+          kwp: 6.0,
+          tilt: 25.0,
+          azimuth: 180.0,
+          start_op_year: 2020,
+          current_year: 2026,
+          forecast_years: 30,
+          init_age: 5,
+          init_rate: 0.005
+        }
+      },
+      site_3_bel_ombre: {
+        meta: {
+          id: "site_3_bel_ombre",
+          site: "Site 3 — Bel Ombre, Maurice",
+          badge: "Accès restreint",
+          restricted_access: true,
+          region: "Savanne, Île Maurice",
+          kwp: 10.0,
+          tilt: 12.0,
+          azimuth: 0.0,
+          start_op_year: 2022,
+          current_year: 2026,
+          forecast_years: 30,
+          init_age: 3,
+          init_rate: 0.005
+        }
+      },
+      site_4_port_louis: {
+        meta: {
+          id: "site_4_port_louis",
+          site: "Site 4 — Port Louis, Maurice",
+          badge: "Accès restreint",
+          restricted_access: true,
+          region: "Port Louis, Île Maurice",
+          kwp: 15.0,
+          tilt: 10.0,
+          azimuth: 0.0,
+          start_op_year: 2021,
+          current_year: 2026,
+          forecast_years: 30,
+          init_age: 4,
+          init_rate: 0.005
+        }
+      },
+      site_5_lausanne: {
+        meta: {
+          id: "site_5_lausanne",
+          site: "Site 5 — Lausanne, Suisse",
+          badge: "Accès restreint",
+          restricted_access: true,
+          region: "Canton de Vaud, Suisse",
+          kwp: 8.0,
+          tilt: 22.0,
+          azimuth: 180.0,
+          start_op_year: 2019,
+          current_year: 2026,
+          forecast_years: 30,
+          init_age: 6,
+          init_rate: 0.005
+        }
+      },
+      site_6_briancon: {
+        meta: {
+          id: "site_6_briancon",
+          site: "Site 6 — Briançon, France",
+          badge: "Accès restreint",
+          restricted_access: true,
+          region: "Hautes-Alpes, France",
+          kwp: 7.2,
+          tilt: 30.0,
+          azimuth: 180.0,
+          start_op_year: 2018,
+          current_year: 2026,
+          forecast_years: 30,
+          init_age: 7,
+          init_rate: 0.005
+        }
+      }
     };
 
     const state = {
@@ -1740,15 +1851,67 @@
 
     function renderHeroSpec() {
       const D = getD();
+      const isRestricted = Boolean(D.meta.restricted_access);
       document.getElementById("heroSpecTitle").textContent = D.meta.site;
-      document.getElementById("heroSpecBadge").textContent = D.meta.badge;
+      const badgeEl = document.getElementById("heroSpecBadge");
+      badgeEl.textContent = D.meta.badge;
+      badgeEl.classList.toggle("is-restricted", isRestricted);
+
       document.getElementById("specKwp").textContent = `${D.meta.kwp.toFixed(2).replace(".", ",")} kWc`;
       document.getElementById("specGeom").textContent = `Tilt ${D.meta.tilt}° • Az. ${D.meta.azimuth}°`;
-      document.getElementById("specCoords").textContent = `${fmtCoord(D.meta.lat, "N", "S")}, ${fmtCoord(D.meta.lon, "E", "O")} • ${fmtInt(D.meta.alt)} m`;
+      document.getElementById("specCoords").textContent = isRestricted
+        ? `${D.meta.region} (GPS masqué)`
+        : `${fmtCoord(D.meta.lat, "N", "S")}, ${fmtCoord(D.meta.lon, "E", "O")} • ${fmtInt(D.meta.alt)} m`;
+      document.getElementById("specChain").textContent = isRestricted
+        ? "Données confidentielles"
+        : "AOI/IAM + SAPM";
     }
 
     function renderKPIs() {
       const D = getD();
+      const isRestricted = Boolean(D.meta.restricted_access);
+
+      if (isRestricted) {
+        const kpis = [
+          {
+            label: "Puissance Crête",
+            val: `${D.meta.kwp.toFixed(2).replace(".", ",")} kWc`,
+            sub: `${D.meta.site.split("—")[0].trim()} • Inclinaison ${D.meta.tilt}° • Azimut ${D.meta.azimuth}°`,
+            restricted: false
+          },
+          {
+            label: "Moyenne Annuelle (Neuf)",
+            val: "Accès restreint",
+            sub: "Productible masqué — Confidentialité client",
+            restricted: true
+          },
+          {
+            label: "Horizon de Suivi",
+            val: `${D.meta.start_op_year}–${D.meta.start_op_year + D.meta.forecast_years}`,
+            sub: `Mise en service : ${D.meta.start_op_year}`,
+            restricted: false
+          },
+          {
+            label: "Cumul Moyen 30 Ans",
+            val: "Accès restreint",
+            sub: "Séries réservées aux comptes habilités",
+            restricted: true
+          }
+        ];
+
+        document.getElementById("kpiGrid").innerHTML = kpis.map((k) => `
+          <div class="kpi-card ${k.restricted ? "is-restricted" : ""}">
+            <div class="kpi-top">
+              <span class="kpi-label">${k.label}</span>
+              <span class="kpi-dot" aria-hidden="true"></span>
+            </div>
+            <div class="kpi-val mono">${k.val}</div>
+            <div class="kpi-sub">${k.sub}</div>
+          </div>
+        `).join("");
+        return;
+      }
+
       const cum30 = D.op_ages.reduce((acc, a) => acc + D.ann_mean * Math.pow(1 - state.rate, a), 0);
       const kpis = [
         {
@@ -1787,6 +1950,26 @@
 
     function computeMetrics(newMin, newMax, factorAge) {
       const D = getD();
+      const boxM = document.getElementById("boxMetricsMonth");
+      const boxY = document.getElementById("boxMetricsYear");
+
+      if (D.meta.restricted_access) {
+        boxM.classList.add("is-restricted");
+        boxY.classList.add("is-restricted");
+        boxM.innerHTML = `
+          <h4>Métriques Mensuelles — Accès restreint</h4>
+          <div>Indicateurs MBE, RMSE et taux de couverture masqués afin de protéger les données d'exploitation du client.</div>
+        `;
+        boxY.innerHTML = `
+          <h4>Bilans Annuels — Accès restreint</h4>
+          <div>Les écarts annuels entre production mesurée et modèle physique ne sont pas affichés publiquement pour ce site.</div>
+        `;
+        return;
+      }
+
+      boxM.classList.remove("is-restricted");
+      boxY.classList.remove("is-restricted");
+
       const obsPts = state.allYears
         ? D.real_pts
         : D.real_pts.filter((p) => p.year === state.year);
@@ -1810,7 +1993,7 @@
           <div class="mono">• <strong>Couloir [Min, Max]</strong> : ${bandPct} % des points (${inBand}/${obsPts.length})</div>
         `;
       }
-      document.getElementById("boxMetricsMonth").innerHTML = htmlM;
+      boxM.innerHTML = htmlM;
 
       const compIdx = [];
       for (let i = 0; i < D.real_years.length; i++) {
@@ -1863,11 +2046,27 @@
           htmlY = `<h4>Bilan Annuel ${state.year}</h4><div>Aucune donnée réelle disponible.</div>`;
         }
       }
-      document.getElementById("boxMetricsYear").innerHTML = htmlY;
+      boxY.innerHTML = htmlY;
     }
 
     function renderTable() {
       const D = getD();
+      const tableLegend = document.getElementById("tableLegend");
+      const tableScrollWrap = document.getElementById("tableScrollWrap");
+      const restrictedNotice = document.getElementById("restrictedTableNotice");
+
+      if (D.meta.restricted_access) {
+        tableLegend.style.display = "none";
+        tableScrollWrap.style.display = "none";
+        restrictedNotice.style.display = "block";
+        document.getElementById("forecastTbody").innerHTML = "";
+        return;
+      }
+
+      tableLegend.style.display = "flex";
+      tableScrollWrap.style.display = "block";
+      restrictedNotice.style.display = "none";
+
       const sumMeanMonth = D.monthly_mean.reduce((a, b) => a + b, 0);
       let cum = 0;
       let rows = "";
@@ -1928,6 +2127,31 @@
 
     function updateCharts() {
       const D = getD();
+      const isRestricted = Boolean(D.meta.restricted_access);
+      const frameMonth = document.getElementById("frameMonth");
+      const frameYear = document.getElementById("frameYear");
+      const chartMonthEl = document.getElementById("chartMonth");
+      const chartYearEl = document.getElementById("chartYear");
+
+      frameMonth.classList.toggle("is-restricted", isRestricted);
+      frameYear.classList.toggle("is-restricted", isRestricted);
+
+      if (isRestricted) {
+        // Suppression complète des graphiques Plotly pour ne conserver aucune donnée dans le DOM
+        if (window.Plotly) {
+          Plotly.purge(chartMonthEl);
+          Plotly.purge(chartYearEl);
+        }
+        chartMonthEl.innerHTML = "";
+        chartYearEl.innerHTML = "";
+
+        renderHeroSpec();
+        computeMetrics(null, null, 1);
+        renderTable();
+        renderKPIs();
+        return;
+      }
+
       const factorAge = Math.pow(1 - state.rate, state.age);
       const newMin = D.monthly_min.map((v) => v * factorAge);
       const newMean = D.monthly_mean.map((v) => v * factorAge);
@@ -1998,172 +2222,4 @@
       const compYears = [], compVals = [], partYears = [], partVals = [];
       for (let i = 0; i < D.real_years.length; i++) {
         if (D.real_annual[i] !== null) {
-          if (D.real_months_count[i] === 12) {
-            compYears.push(D.real_years[i]);
-            compVals.push(D.real_annual[i]);
-          } else {
-            partYears.push(D.real_years[i]);
-            partVals.push(D.real_annual[i]);
-          }
-        }
-      }
-
-      const yearTraces = [
-        {
-          x: D.op_years, y: annMaxOp, type: "scatter", mode: "lines",
-          line: { width: 0 }, showlegend: false, hoverinfo: "skip"
-        },
-        {
-          x: D.op_years, y: annMinOp, type: "scatter", mode: "lines",
-          fill: "tonexty", fillcolor: "rgba(217, 119, 6, 0.15)",
-          line: { width: 0 }, name: `Couloir (${D.meta.start_op_year}–${D.op_years[D.op_years.length - 1]})`
-        },
-        {
-          x: D.op_years, y: annMeanOp, type: "scatter", mode: "lines",
-          line: { color: "#d97706", width: 2.3, dash: "dash" },
-          name: `Moyenne (${(state.rate * 100).toFixed(2)} %/an)`
-        },
-        {
-          x: compYears, y: compVals, type: "scatter", mode: "lines+markers",
-          line: { color: "#0d9488", width: 2.2 }, marker: { size: 6.5 },
-          name: "Réel annuel (12m)"
-        },
-        {
-          x: partYears, y: partVals, type: "scatter", mode: "markers",
-          marker: { color: "#2575d4", size: 9, symbol: "diamond" },
-          name: "Réel partiel"
-        }
-      ];
-
-      Plotly.react("chartMonth", monthTraces, {
-        title: state.allYears
-          ? `Profil Mensuel — Toutes années (Âge=${state.age}a)`
-          : `Profil Mensuel — Année ${state.year} (Âge=${state.age}a)`,
-        font: { family: "Inter, sans-serif", color: "#0f172a" },
-        xaxis: { title: "Mois" },
-        yaxis: { title: "Énergie AC (kWh)" },
-        legend: { orientation: "h", y: -0.24 },
-        margin: { l: 56, r: 20, t: 48, b: 100 },
-        paper_bgcolor: "#ffffff",
-        plot_bgcolor: "#ffffff"
-      }, { responsive: true });
-
-      Plotly.react("chartYear", yearTraces, {
-        title: `Couloir Annuel (${D.meta.start_op_year}–${D.op_years[D.op_years.length - 1]}, 30 ans)`,
-        font: { family: "Inter, sans-serif", color: "#0f172a" },
-        xaxis: { title: "Année", range: [D.meta.start_op_year - 0.5, D.op_years[D.op_years.length - 1] + 0.8] },
-        yaxis: { title: "Énergie Annuelle AC (kWh)" },
-        legend: { orientation: "h", y: -0.24 },
-        margin: { l: 62, r: 20, t: 48, b: 100 },
-        paper_bgcolor: "#ffffff",
-        plot_bgcolor: "#ffffff"
-      }, { responsive: true });
-
-      renderHeroSpec();
-      computeMetrics(newMin, newMax, factorAge);
-      renderTable();
-      renderKPIs();
-    }
-
-    const rngAge = document.getElementById("rngAge");
-    const rngRate = document.getElementById("rngRate");
-    const rngYear = document.getElementById("rngYear");
-    const btnAll = document.getElementById("btnAll");
-    const btnReset = document.getElementById("btnReset");
-    const siteSelect = document.getElementById("siteSelect");
-    const siteModeBadge = document.getElementById("siteModeBadge");
-
-    function syncYearSliderBounds() {
-      const D = getD();
-      rngYear.min = D.meta.start_op_year;
-      rngYear.max = D.meta.current_year;
-      if (state.year < D.meta.start_op_year || state.year > D.meta.current_year) {
-        state.year = D.meta.start_op_year;
-      }
-      rngYear.value = state.year;
-    }
-
-    function syncLabels() {
-      const D = getD();
-      document.getElementById("lblAge").textContent = `${state.age} ans`;
-      document.getElementById("lblRate").textContent = `${(state.rate * 100).toFixed(2)} %/an`;
-      document.getElementById("lblYear").textContent = state.allYears ? "Toutes" : `${state.year}`;
-      btnAll.classList.toggle("active", state.allYears);
-      if (siteSelect.value !== state.siteId) {
-        siteSelect.value = state.siteId;
-      }
-      if (D.meta.restricted_access) {
-        siteModeBadge.textContent = "Accès restreint";
-        siteModeBadge.className = "site-mode-badge is-sim";
-      } else {
-        siteModeBadge.textContent = "Données de référence";
-        siteModeBadge.className = "site-mode-badge is-real";
-      }
-    }
-
-    function switchSite(newSiteId) {
-      if (!SITES[newSiteId]) return;
-      const D = SITES[newSiteId];
-      state.siteId = newSiteId;
-      state.age = D.meta.init_age;
-      state.rate = D.meta.init_rate;
-      state.year = D.meta.start_op_year;
-      state.allYears = true;
-
-      rngAge.value = state.age;
-      rngRate.value = (state.rate * 100).toFixed(2);
-      syncYearSliderBounds();
-      syncLabels();
-      updateCharts();
-    }
-
-    siteSelect.addEventListener("change", (e) => switchSite(e.target.value));
-
-    rngAge.addEventListener("input", () => {
-      state.age = parseInt(rngAge.value, 10);
-      syncLabels();
-      updateCharts();
-    });
-
-    rngRate.addEventListener("input", () => {
-      state.rate = parseFloat(rngRate.value) / 100.0;
-      syncLabels();
-      updateCharts();
-    });
-
-    rngYear.addEventListener("input", () => {
-      const D = getD();
-      state.year = parseInt(rngYear.value, 10);
-      state.allYears = false;
-      const syncedAge = Math.max(0, Math.min(30, state.year - D.meta.start_op_year));
-      state.age = syncedAge;
-      rngAge.value = syncedAge;
-      syncLabels();
-      updateCharts();
-    });
-
-    btnAll.addEventListener("click", () => {
-      state.allYears = true;
-      syncLabels();
-      updateCharts();
-    });
-
-    btnReset.addEventListener("click", () => {
-      const D = getD();
-      state.age = D.meta.init_age;
-      state.rate = D.meta.init_rate;
-      state.year = D.meta.start_op_year;
-      state.allYears = true;
-      rngAge.value = state.age;
-      rngRate.value = (state.rate * 100).toFixed(2);
-      rngYear.value = state.year;
-      syncLabels();
-      updateCharts();
-    });
-
-    syncYearSliderBounds();
-    syncLabels();
-    updateCharts();
-  </script>
-</body>
-</html>
+          if (D.real
